@@ -6,13 +6,14 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: max(14px, env(safe-area-inset-top)) var(--gut) 14px;
+  padding: max(16px, env(safe-area-inset-top)) var(--gut) 16px;
   color: var(--paper);
-  transition: color 0.5s var(--ease-out);
+  transition: color 0.6s var(--ease-lux), opacity 0.6s var(--ease-lux);
   pointer-events: none;
 }
 .chrome > * { pointer-events: auto; }
 .chrome[data-tone='light'] { color: var(--char); }
+.chrome[data-tone='light'] .btn--line { --line: rgb(17 21 28 / 0.35); --fill: var(--char); --on-fill: var(--cloth); }
 
 .mark {
   justify-self: start;
@@ -31,17 +32,19 @@
   gap: 10px;
   font-family: var(--f-struct);
   line-height: 1;
+  transition: opacity 0.5s var(--ease-lux);
 }
+.clock.is-hidden { opacity: 0; }
 .clock__label {
   font-family: var(--f-voice);
   font-style: italic;
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.66;
 }
 .clock__time {
   font-stretch: 50%;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 21px;
   font-variant-numeric: tabular-nums;
   min-width: 3ch;
 }
@@ -50,73 +53,25 @@
   justify-self: end;
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2vw, 28px);
+  gap: clamp(18px, 2.2vw, 34px);
 }
-.route-toggle,
-.chrome__reserve {
+.chrome__link {
   font-family: var(--f-struct);
   font-stretch: 125%;
   font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 8px 0;
-  position: relative;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.6s var(--ease-lux);
 }
-.route-toggle::before,
-.chrome__reserve::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  margin-right: 9px;
-  vertical-align: 1px;
-  background: var(--port);
-  box-shadow: 0 0 10px var(--port);
-}
-.chrome__reserve::before { background: var(--stbd); box-shadow: 0 0 10px var(--stbd); }
+.chrome__link:hover, .chrome__link:focus-visible { background-size: 100% 1px; }
 .route-toggle__close { display: none; }
 .route-open .route-toggle__label { display: none; }
 .route-open .route-toggle__close { display: inline; }
 .route-open .chrome { color: var(--paper); }
-
-/* navigation lights on the edges of the frame: the viewport is the vessel */
-.lamps {
-  position: fixed;
-  z-index: 25;
-  inset: 0;
-  pointer-events: none;
-  font-family: var(--f-struct);
-  font-stretch: 125%;
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--paper-60);
-  transition: color 0.5s;
-}
-.chrome[data-tone='light'] ~ .lamps { color: var(--char-60); }
-.lamp {
-  position: absolute;
-  top: 50%;
-  margin: -2.5px 0;
-  writing-mode: vertical-rl;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.lamp::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-}
-/* both lamps sit exactly on the centre line; their names run away from it */
-.lamp--port { left: 12px; top: auto; bottom: 50%; transform: rotate(180deg); }
-.lamp--port::before { background: var(--port); box-shadow: 0 0 8px 1px var(--port); }
-.lamp--stbd { right: 12px; }
-.lamp--stbd::before { background: var(--stbd); box-shadow: 0 0 8px 1px var(--stbd); }
-@media (max-width: 820px) { .lamps { display: none; } }
+.dish-open .chrome { opacity: 0; pointer-events: none; }
 
 /* ─────────────────────────── route: the tide rises over the page ─────────────────────────── */
 .route {
@@ -149,10 +104,7 @@
   font-size: 18px;
   opacity: 0.7;
 }
-.route__list {
-  align-self: center;
-  counter-reset: stop;
-}
+.route__list { align-self: center; }
 .route__list a {
   display: grid;
   grid-template-columns: minmax(3.2ch, auto) 1fr;
@@ -169,7 +121,7 @@
   font-size: clamp(44px, 9.6vh, 118px);
   line-height: 0.95;
   font-variant-numeric: tabular-nums;
-  transition: font-stretch 0.6s var(--ease-out), color 0.4s;
+  transition: color 0.5s var(--ease-lux);
 }
 .route__list span {
   font-family: var(--f-voice);
@@ -177,13 +129,13 @@
   font-weight: 300;
   font-size: clamp(26px, 5.2vh, 64px);
   line-height: 1;
-  transition: transform 0.6s var(--ease-out);
+  transition: transform 0.8s var(--ease-lux);
 }
 .route__list a:hover time,
-.route__list a:focus-visible time { font-stretch: 112%; color: var(--sodium); }
+.route__list a:focus-visible time,
+.route__list a[aria-current='true'] time { color: var(--accent); }
 .route__list a:hover span,
 .route__list a:focus-visible span { transform: translateX(1.2vw); }
-.route__list a[aria-current='true'] time { color: var(--sodium); }
 .route__foot {
   display: flex;
   flex-wrap: wrap;
@@ -196,11 +148,39 @@
   opacity: 0.8;
 }
 .route__inner > * { opacity: 0; }
-.route.is-in .route__inner > * { opacity: 1; transition: opacity 0.5s 0.25s; }
+.route.is-in .route__inner > * { opacity: 1; transition: opacity 0.6s 0.25s; }
 
+/* ─────────────────────────── dock: small screens only ─────────────────────────── */
+.dock { display: none; }
+@media (max-width: 820px) {
+  .dock {
+    position: fixed;
+    z-index: 26;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px var(--gut) calc(12px + env(safe-area-inset-bottom));
+    background: rgb(6 8 13 / 0.94);
+    border-top: 1px solid var(--paper-15);
+    transform: translateY(105%);
+    transition: transform 0.7s var(--ease-lux);
+  }
+  .dock.is-on { transform: none; }
+  .route-open .dock, .dish-open .dock { transform: translateY(105%); }
+  .dock__info { font-family: var(--f-voice); font-style: italic; font-size: 15px; color: var(--paper-60); }
+  .dock__info strong { font-family: var(--f-struct); font-style: normal; font-stretch: 50%; font-weight: 800; font-size: 20px; color: var(--paper); margin-right: 6px; }
+}
+
+@media (max-width: 820px) {
+  .chrome .chrome__reserve { display: none; }
+}
 @media (max-width: 640px) {
   .mark { font-size: 15px; }
   .clock__label { display: none; }
-  .clock__time { font-size: 19px; }
-  .chrome__reserve { display: none; }
+  .clock__time { font-size: 18px; }
+  .chrome .chrome__reserve, .chrome .chrome__nav a.chrome__link { display: none; }
 }

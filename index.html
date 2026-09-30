@@ -85,7 +85,15 @@
     }
   }
   </script>
-  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+  <script>
+    (function (d) {
+      d.classList.replace('no-js', 'js');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        d.classList.add('intro');
+        setTimeout(function () { d.classList.remove('intro'); }, 4500);
+      }
+    })(document.documentElement);
+  </script>
 </head>
 <body>
   <a class="skip" href="#bu-gece">Doğrudan rezervasyona geç</a>
@@ -96,23 +104,19 @@
     <a class="mark" href="#aksam" aria-label="Boğazdayız, başa dön">
       <span class="mark__word">Boğazdayız</span>
     </a>
-    <p class="clock" aria-hidden="true">
-      <span class="clock__label" data-clock-label>bu gece</span>
+    <p class="clock" aria-hidden="true" data-clock-wrap>
+      <span class="clock__label">bu gece</span>
       <span class="clock__time" data-clock>19:30</span>
     </p>
     <nav class="chrome__nav" aria-label="Kısayollar">
-      <button class="route-toggle" type="button" aria-expanded="false" aria-controls="rota" data-route-toggle>
+      <a class="chrome__link" href="#sofra">Menü</a>
+      <button class="route-toggle chrome__link" type="button" aria-expanded="false" aria-controls="rota" data-route-toggle>
         <span class="route-toggle__label">Rota</span>
         <span class="route-toggle__close">Kapat</span>
       </button>
-      <a class="chrome__reserve" href="#bu-gece">Rezervasyon</a>
+      <a class="btn btn--line btn--sm chrome__reserve" href="#bu-gece"><span>Rezervasyon</span></a>
     </nav>
   </header>
-
-  <div class="lamps" aria-hidden="true">
-    <span class="lamp lamp--port">İskele</span>
-    <span class="lamp lamp--stbd">Sancak</span>
-  </div>
 
   <div class="route" id="rota" role="dialog" aria-modal="true" aria-label="Gecenin rotası" hidden data-route>
     <svg class="route__tide" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -121,12 +125,12 @@
     <div class="route__inner">
       <p class="route__kicker">Gecenin rotası</p>
       <ol class="route__list">
-        <li><a href="#aksam" data-night="0"><time>19:30</time><span>Kabataş</span></a></li>
-        <li><a href="#iskele" data-night="0.25"><time>20:30</time><span>Tosun Paşa</span></a></li>
-        <li><a href="#sofra" data-night="0.375"><time>21:00</time><span>Sofra</span></a></li>
-        <li><a href="#sahne" data-night="0.5"><time>21:30</time><span>Sahne</span></a></li>
-        <li><a href="#donus" data-night="1"><time>23:30</time><span>Dönüş</span></a></li>
-        <li><a href="#bu-gece" data-night="1"><time>—</time><span>Bu gece?</span></a></li>
+        <li><a href="#aksam"><time>19:30</time><span>Kabataş</span></a></li>
+        <li><a href="#iskele"><time>20:30</time><span>Tosun Paşa</span></a></li>
+        <li><a href="#sofra"><time>21:00</time><span>Sofra</span></a></li>
+        <li><a href="#sahne"><time>21:30</time><span>Sahne</span></a></li>
+        <li><a href="#donus"><time>23:30</time><span>Dönüş</span></a></li>
+        <li><a href="#bu-gece"><time>—</time><span>Bu gece?</span></a></li>
       </ol>
       <div class="route__foot">
         <a href="tel:+905400025334">+90 540 002 53 34</a>
@@ -140,32 +144,59 @@
     <!-- 19:30 — Kabataş. Facing north: Europe on the left, Asia on the right, the bridge ahead. -->
     <section class="scene city" id="aksam" aria-labelledby="h-aksam" data-scene="city">
       <h1 class="hero" id="h-aksam" aria-label="Bu gece Boğazdayız.">
-        <span class="hero__pre">Bu gece </span><span class="hero__word hero__word--a" data-word-a>Boğaz</span><span class="hero__word hero__word--b" data-word-b>dayız</span>
+        <span class="hero__pre"><span data-intro>Bu gece </span></span><span class="hero__word hero__word--a" data-word-a>Boğaz</span><span class="hero__word hero__word--b" data-word-b>dayız</span>
       </h1>
-      <p class="shore shore--west" aria-hidden="true">Avrupa</p>
-      <p class="shore shore--east" aria-hidden="true">Asya</p>
-      <p class="city__where meta">Kabataş Vapur İskelesi <span class="coord">41°02′ K · 28°59′ D</span></p>
-      <p class="city__when meta">Her gece <strong>19:30</strong> biniş</p>
-      <p class="city__cue meta" aria-hidden="true"><span class="cue-line"></span>Kaydırdıkça gece ilerler</p>
+      <div class="city__ui" data-city-ui>
+        <p class="shore shore--west" aria-hidden="true" data-intro>Avrupa</p>
+        <p class="shore shore--east" aria-hidden="true" data-intro>Asya</p>
+        <p class="city__where meta" data-intro>Kabataş Vapur İskelesi <span class="coord">41°02′ K · 28°59′ D</span></p>
+        <p class="city__cue meta" aria-hidden="true" data-intro><span class="cue-line"></span>Kaydırdıkça gece ilerler</p>
+        <div class="city__cta" data-intro>
+          <p class="meta">Her gece <strong>19:30</strong> biniş</p>
+          <a class="btn btn--line" href="#bu-gece"><span>Yerinizi ayırtın</span><i class="arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
     </section>
 
-    <!-- The strait itself. -->
-    <section class="scene strait" id="bogaz" aria-labelledby="h-bogaz" data-scene="strait">
-      <p class="strait__kicker meta">Boğaziçi · Avrupa — Asya</p>
-      <h2 class="strait__line voice" id="h-bogaz"><span>İki kıta arasında,</span> <span>üç saat.</span></h2>
-      <p class="strait__meta meta"><time>20:30</time> kalkış <span class="sep"></span> <time>23:30</time> dönüş</p>
+    <!-- The night in five moments. The stops light up as the scroll reaches them. -->
+    <section class="scene akis" id="akis" aria-labelledby="h-akis" data-scene="timeline">
+      <div class="akis__intro">
+        <p class="akis__kicker meta">Boğaziçi · Avrupa — Asya</p>
+        <h2 class="akis__line voice" id="h-akis"><span>İki kıta arasında,</span> <span>üç saat.</span></h2>
+        <p class="akis__clock" aria-hidden="true"><span class="akis__digits" data-akis-time>19:30</span></p>
+      </div>
+      <ol class="stops" data-stops>
+        <li class="stop" data-time="19:30">
+          <time class="stop__time" datetime="19:30">19:30</time>
+          <div class="stop__body"><h3 class="stop__title">Biniş</h3><p>Kabataş Vapur İskelesi</p></div>
+        </li>
+        <li class="stop" data-time="20:30">
+          <time class="stop__time" datetime="20:30">20:30</time>
+          <div class="stop__body"><h3 class="stop__title">Kalkış</h3><p>Tosun Paşa, Kabataş’tan Boğaz’a açılır.</p></div>
+        </li>
+        <li class="stop" data-time="21:00">
+          <time class="stop__time" datetime="21:00">21:00</time>
+          <div class="stop__body"><h3 class="stop__title">Akşam yemeği</h3><p>Meze sofrası, ara sıcaklar; ana yemekte ızgara ya da balık.</p></div>
+        </li>
+        <li class="stop" data-time="21:30">
+          <time class="stop__time" datetime="21:30">21:30</time>
+          <div class="stop__body"><h3 class="stop__title">Sahne</h3><p>Canlı müzik, oryantal, semazen, darbuka ve DJ.</p></div>
+        </li>
+        <li class="stop" data-time="23:30">
+          <time class="stop__time" datetime="23:30">23:30</time>
+          <div class="stop__body"><h3 class="stop__title">Dönüş</h3><p>Kabataş Vapur İskelesi.</p></div>
+        </li>
+      </ol>
     </section>
 
     <!-- The vessel is the door of the night. -->
     <section class="scene vessel" id="iskele" aria-labelledby="h-iskele" data-scene="vessel">
       <div class="vessel__frame">
-        <p class="vessel__kicker meta">Gecenin kapısı</p>
-        <dl class="board">
-          <div class="board__row"><dt>Biniş</dt><dd><time datetime="19:30">19:30</time></dd></div>
-          <div class="board__row"><dt>Kalkış</dt><dd><time datetime="20:30">20:30</time></dd></div>
-          <div class="board__row"><dt>Dönüş</dt><dd><time datetime="23:30">23:30</time></dd></div>
-        </dl>
-        <p class="board__where meta">Kabataş Vapur İskelesi <span class="sep"></span> her gece</p>
+        <div class="vessel__caption" data-vessel-caption>
+          <p class="meta">Gecenin kapısı</p>
+          <p class="vessel__line voice">Işıklar yanık,<br />masa hazır.</p>
+          <p class="meta vessel__where">Kabataş Vapur İskelesi · her gece 19:30 biniş</p>
+        </div>
         <h2 class="hull" id="h-iskele" data-hull><span class="hull__name">Tosun Paşa</span><span class="hull__role">restoran gemisi</span></h2>
         <p class="vessel__welcome voice" data-welcome>Buyurun.</p>
       </div>
@@ -174,129 +205,129 @@
     <!-- 21:00 — the table. The window light becomes the tablecloth. -->
     <section class="scene sofra" id="sofra" aria-labelledby="h-sofra" data-scene="sofra">
       <div class="sofra__cloth" data-cloth>
-        <div class="sofra__track" data-track>
-          <header class="course course--open">
+        <header class="menu-head">
+          <div class="menu-head__title">
             <p class="stamp"><time datetime="21:00">21:00</time> akşam yemeği</p>
-            <h2 class="sofra__title voice" id="h-sofra">Sofra<br />kurulur.</h2>
-            <p class="sofra__note meta">Menü sabittir · ana yemekte seçim sizin</p>
-          </header>
-
-          <article class="course course--meze" aria-labelledby="h-meze">
-            <h3 class="course__name meta" id="h-meze"><span class="course__no">I</span> Başlangıç ve mezeler</h3>
-            <ul class="plates" data-plates>
-              <li class="plate plate--bowl" style="--x:0;--y:10;--d:20"><span>Peynirli haydari</span></li>
-              <li class="plate" style="--x:8;--y:42;--d:26"><span>Nar ekşili cevizli kısır</span></li>
-              <li class="plate plate--oval" style="--x:18;--y:0;--d:18"><span>Bakla fava</span></li>
-              <li class="plate" style="--x:26;--y:36;--d:23"><span>Börülce salatası</span></li>
-              <li class="plate plate--bowl" style="--x:36;--y:2;--d:19"><span>Dereotlu havuç tarator</span></li>
-              <li class="plate" style="--x:43;--y:32;--d:28"><span>Enginar yatağında taze fasulye</span></li>
-              <li class="plate plate--oval" style="--x:55;--y:4;--d:17"><span>Ezine beyaz peynir</span></li>
-              <li class="plate" style="--x:61;--y:46;--d:19"><span>Domates söğüş</span></li>
-              <li class="plate" style="--x:69;--y:8;--d:17"><span>Salatalık söğüş</span></li>
-              <li class="plate plate--bowl" style="--x:76;--y:38;--d:24"><span>Hardal soslu patates salatası</span></li>
-              <li class="plate" style="--x:86;--y:4;--d:23"><span>Deniz mahsulleri salatası</span></li>
-            </ul>
-          </article>
-
-          <article class="course course--ara" aria-labelledby="h-ara">
-            <h3 class="course__name meta" id="h-ara"><span class="course__no">II</span> Ara sıcak</h3>
-            <p class="closeup" aria-hidden="true">Kalamar</p>
-            <ul class="ara">
-              <li><span class="voice">Kalamar,</span> <span class="meta">dip sosla</span></li>
-              <li><span class="voice">Üç peynirli sebzeli Çin böreği</span></li>
-            </ul>
-          </article>
-
-          <article class="course course--ana" aria-labelledby="h-ana">
-            <h3 class="course__name meta" id="h-ana"><span class="course__no">III</span> Ana yemek · birini seçin</h3>
-            <div class="choice">
-              <section class="dish dish--izgara" aria-labelledby="h-izgara">
-                <h4 class="dish__word" id="h-izgara"><span aria-hidden="true">Izgara</span><span class="sr">Karışık Izgara Tabağı</span></h4>
-                <p class="dish__name voice">Karışık Izgara Tabağı</p>
-                <ul class="dish__parts">
-                  <li><b>180</b><small>gr</small> tavuk pirzola</li>
-                  <li><b>120</b><small>gr</small> kasap köfte</li>
-                  <li>patates püresi</li>
-                  <li>ızgara domates ve biber</li>
-                  <li>sebzeli meyhane pilavı</li>
-                </ul>
-              </section>
-              <p class="choice__or voice" aria-hidden="true">ya da</p>
-              <section class="dish dish--balik" aria-labelledby="h-balik">
-                <h4 class="dish__word" id="h-balik"><span aria-hidden="true">Balık</span><span class="sr">Izgara Balık</span></h4>
-                <p class="dish__name voice">Izgara Balık</p>
-                <p class="dish__season meta">Mevsimine göre</p>
-                <ul class="dish__parts dish__parts--fish">
-                  <li>levrek</li>
-                  <li>çupra</li>
-                  <li>ya da somon</li>
-                </ul>
-                <p class="dish__side">roka, limon, soğan, dip sos, soğan halkaları</p>
-              </section>
-            </div>
-          </article>
-
-          <article class="course course--tatli" aria-labelledby="h-tatli">
-            <h3 class="course__name meta" id="h-tatli"><span class="course__no">IV</span> Tatlı</h3>
-            <p class="sweet"><span class="sweet__main" data-layers>Baklava</span> <span class="voice sweet__or">ya da mevsim meyveleri</span></p>
-            <p class="drinks meta">Sınırsız meşrubat</p>
-          </article>
-
-          <div class="course course--dim" aria-hidden="true">
-            <p class="stamp"><time>21:30</time></p>
-            <p class="dimline voice">Işıklar<br />kısılır.</p>
+            <h2 class="voice" id="h-sofra">Sofra kurulur.</h2>
           </div>
+          <div class="menu-head__price">
+            <p class="meta">Alkolsüz menü</p>
+            <p class="menu-head__amount">1.750 TL <small>+ KDV</small></p>
+            <p>Sınırsız meşrubat dahil. Menü sabittir; ana yemekte seçim sizin.</p>
+            <p class="menu-head__fine">bogazdayiz.com’da listelenen fiyattır; güncel fiyatı rezervasyonda teyit edin.</p>
+          </div>
+        </header>
+
+        <section class="course course--meze" aria-labelledby="h-meze">
+          <header class="course__head" data-reveal>
+            <span class="course__no">I</span>
+            <h3 class="course__title" id="h-meze">Başlangıç ve mezeler</h3>
+            <p class="course__hint meta">Tabağa dokunun</p>
+          </header>
+          <ul class="plates" data-plates>
+              <li class="plate-slot" style="--x:0;--y:8;--d:20"><button class="plate plate--bowl" type="button" data-dish="haydari" aria-haspopup="dialog"><span>Peynirli haydari</span></button></li>
+              <li class="plate-slot" style="--x:6;--y:46;--d:25"><button class="plate plate--plate" type="button" data-dish="kisir" aria-haspopup="dialog"><span>Nar ekşili cevizli kısır</span></button></li>
+              <li class="plate-slot" style="--x:17;--y:0;--d:18"><button class="plate plate--oval" type="button" data-dish="fava" aria-haspopup="dialog"><span>Bakla fava</span></button></li>
+              <li class="plate-slot" style="--x:24;--y:44;--d:22"><button class="plate plate--plate" type="button" data-dish="borulce" aria-haspopup="dialog"><span>Börülce salatası</span></button></li>
+              <li class="plate-slot" style="--x:34;--y:6;--d:19"><button class="plate plate--bowl" type="button" data-dish="tarator" aria-haspopup="dialog"><span>Dereotlu havuç tarator</span></button></li>
+              <li class="plate-slot" style="--x:41;--y:38;--d:27"><button class="plate plate--plate" type="button" data-dish="enginar" aria-haspopup="dialog"><span>Enginar yatağında taze fasulye</span></button></li>
+              <li class="plate-slot" style="--x:51;--y:0;--d:17"><button class="plate plate--oval" type="button" data-dish="peynir" aria-haspopup="dialog"><span>Ezine beyaz peynir</span></button></li>
+              <li class="plate-slot" style="--x:60;--y:50;--d:19"><button class="plate plate--plate" type="button" data-dish="domates" aria-haspopup="dialog"><span>Domates söğüş</span></button></li>
+              <li class="plate-slot" style="--x:67;--y:8;--d:17"><button class="plate plate--plate" type="button" data-dish="salatalik" aria-haspopup="dialog"><span>Salatalık söğüş</span></button></li>
+              <li class="plate-slot" style="--x:75;--y:42;--d:23"><button class="plate plate--bowl" type="button" data-dish="patates" aria-haspopup="dialog"><span>Hardal soslu patates salatası</span></button></li>
+              <li class="plate-slot" style="--x:83;--y:2;--d:22"><button class="plate plate--plate" type="button" data-dish="deniz" aria-haspopup="dialog"><span>Deniz mahsulleri salatası</span></button></li>
+          </ul>
+        </section>
+
+        <section class="course course--ara" aria-labelledby="h-ara">
+          <header class="course__head" data-reveal>
+            <span class="course__no">II</span>
+            <h3 class="course__title" id="h-ara">Ara sıcak</h3>
+          </header>
+          <ul class="rows">
+            <li><button class="row" type="button" data-dish="kalamar" aria-haspopup="dialog"><span class="row__name">Kalamar</span><span class="row__note">dip sosla</span><span class="row__more">Detay</span></button></li>
+            <li><button class="row" type="button" data-dish="borek" aria-haspopup="dialog"><span class="row__name">Üç peynirli sebzeli Çin böreği</span><span class="row__more">Detay</span></button></li>
+          </ul>
+        </section>
+
+        <section class="course course--ana" aria-labelledby="h-ana">
+          <header class="course__head" data-reveal>
+            <span class="course__no">III</span>
+            <h3 class="course__title" id="h-ana">Ana yemek</h3>
+            <p class="course__hint meta">Birini seçin</p>
+          </header>
+          <div class="mains">
+            <button class="main" type="button" data-dish="izgara" aria-haspopup="dialog">
+              <span class="main__name">Karışık Izgara Tabağı</span>
+              <span class="main__parts">
+                <span><b>180</b> gr tavuk pirzola</span>
+                <span><b>120</b> gr kasap köfte</span>
+                <span>patates püresi</span>
+                <span>ızgara domates ve biber</span>
+                <span>sebzeli meyhane pilavı</span>
+              </span>
+              <span class="row__more">Detay</span>
+            </button>
+            <p class="mains__or voice" aria-hidden="true">ya da</p>
+            <button class="main" type="button" data-dish="balik" aria-haspopup="dialog">
+              <span class="main__name">Izgara Balık</span>
+              <span class="main__season meta">Mevsimine göre</span>
+              <span class="main__fish">levrek, çupra ya da somon</span>
+              <span class="main__parts main__parts--side">roka, limon, soğan, dip sos, soğan halkaları</span>
+              <span class="row__more">Detay</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="course course--tatli" aria-labelledby="h-tatli">
+          <header class="course__head" data-reveal>
+            <span class="course__no">IV</span>
+            <h3 class="course__title" id="h-tatli">Tatlı ve içecek</h3>
+          </header>
+          <ul class="rows">
+            <li><button class="row" type="button" data-dish="baklava" aria-haspopup="dialog"><span class="row__name">Baklava</span><span class="row__note">ya da</span><span class="row__more">Detay</span></button></li>
+            <li><button class="row" type="button" data-dish="meyve" aria-haspopup="dialog"><span class="row__name">Mevsim meyveleri</span><span class="row__more">Detay</span></button></li>
+            <li><button class="row row--quiet" type="button" data-dish="mesrubat" aria-haspopup="dialog"><span class="row__name">Sınırsız meşrubat</span><span class="row__note">menüye dahil</span><span class="row__more">Detay</span></button></li>
+          </ul>
+        </section>
+
+        <div class="course--dim" aria-hidden="true">
+          <p class="stamp"><time>21:30</time></p>
+          <p class="dimline voice">Işıklar<br />kısılır.</p>
         </div>
       </div>
     </section>
 
-    <!-- 21:30 — the stage. Every act moves in its own way. -->
+    <!-- 21:30 — the stage. One slow motion: the whirl. -->
     <section class="scene sahne" id="sahne" aria-labelledby="h-sahne" data-scene="stage">
-      <header class="sahne__head">
-        <p class="stamp"><time datetime="21:30">21:30</time> sahne</p>
-        <h2 class="sr" id="h-sahne">Gecenin gösterileri</h2>
-        <p class="sahne__note meta">Akış geceden geceye değişebilir</p>
-      </header>
-      <ol class="acts">
-        <li class="act act--muzik" data-act="muzik">
-          <h3 class="act__title" aria-label="Canlı müzik"><span class="string-word" data-string-word>Canlı müzik</span></h3>
-          <svg class="string" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><path data-string d="M0 100 L1000 100" /></svg>
-          <p class="act__line voice">Ses, suyun üstünden kıyıya taşar.</p>
-        </li>
-        <li class="act act--oryantal" data-act="oryantal">
-          <h3 class="act__title" aria-label="Oryantal"><span class="sway" data-sway>Oryantal</span></h3>
-          <p class="act__line voice">Ritim, bedenin diline döner.</p>
-        </li>
-        <li class="act act--semazen" data-act="semazen">
-          <div class="whirl" aria-hidden="true" data-whirl>
-            <svg viewBox="0 0 600 600">
-              <defs>
-                <path id="whirl-outer" d="M300,300 m-262,0 a262,262 0 1,1 524,0 a262,262 0 1,1 -524,0" />
-                <path id="whirl-inner" d="M300,300 m-178,0 a178,178 0 1,1 356,0 a178,178 0 1,1 -356,0" />
-              </defs>
-              <g class="whirl__outer" data-whirl-outer>
-                <text><textPath href="#whirl-outer" textLength="1640">Bir el göğe · bir el yere · Bir el göğe · bir el yere ·</textPath></text>
-              </g>
-              <g class="whirl__inner" data-whirl-inner>
-                <text><textPath href="#whirl-inner" textLength="1110">Semazen · Semazen · Semazen ·</textPath></text>
-              </g>
-            </svg>
-          </div>
-          <h3 class="act__title act__title--center">Semazen</h3>
-          <p class="act__line voice">Bir el göğe, bir el yere.</p>
-        </li>
-        <li class="act act--darbuka" data-act="darbuka">
-          <h3 class="act__title">Darbuka</h3>
-          <p class="beats" aria-hidden="true" data-beats>
-            <span class="beat beat--dum">Düm</span><span class="beat">tek</span><span class="beat beat--rest">·</span><span class="beat">tek</span><span class="beat beat--dum">düm</span><span class="beat beat--rest">·</span><span class="beat">tek</span><span class="beat beat--rest">·</span>
-          </p>
-          <p class="act__line voice">Tempo yükselir.</p>
-        </li>
-        <li class="act act--dj" data-act="dj">
-          <h3 class="act__title act__title--dj" data-dj>DJ</h3>
-          <p class="act__line voice">Pist açık.</p>
-        </li>
-      </ol>
+      <div class="sahne__visual" aria-hidden="true">
+        <div class="whirl" data-whirl>
+          <svg viewBox="0 0 600 600">
+            <defs>
+              <path id="whirl-outer" d="M300,300 m-262,0 a262,262 0 1,1 524,0 a262,262 0 1,1 -524,0" />
+              <path id="whirl-inner" d="M300,300 m-178,0 a178,178 0 1,1 356,0 a178,178 0 1,1 -356,0" />
+            </defs>
+            <g class="whirl__outer" data-whirl-outer>
+              <text><textPath href="#whirl-outer" textLength="1640">Bir el göğe · bir el yere · Bir el göğe · bir el yere ·</textPath></text>
+            </g>
+            <g class="whirl__inner" data-whirl-inner>
+              <text><textPath href="#whirl-inner" textLength="1110">Semazen · Semazen · Semazen ·</textPath></text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="sahne__body">
+        <p class="stamp" data-reveal><time datetime="21:30">21:30</time> sahne</p>
+        <h2 class="sahne__title voice" id="h-sahne" data-reveal>Gecenin sahnesi.</h2>
+        <ul class="acts">
+          <li class="act" data-reveal><h3 class="act__name">Canlı müzik</h3><p class="act__line">Ses, suyun üstünden kıyıya taşar.</p></li>
+          <li class="act" data-reveal><h3 class="act__name">Oryantal</h3><p class="act__line">Ritim, bedenin diline döner.</p></li>
+          <li class="act" data-reveal><h3 class="act__name">Semazen</h3><p class="act__line">Bir el göğe, bir el yere.</p></li>
+          <li class="act" data-reveal><h3 class="act__name">Darbuka</h3><p class="act__line">Düm, tek, tek. Tempo yükselir.</p></li>
+          <li class="act" data-reveal><h3 class="act__name">DJ</h3><p class="act__line">Pist açık.</p></li>
+        </ul>
+        <p class="sahne__note meta" data-reveal>Akış geceden geceye değişebilir</p>
+      </div>
     </section>
 
     <!-- 23:30 — back to Kabataş, the two shores join again. -->
@@ -308,11 +339,12 @@
 
     <!-- The question the whole night was asking. -->
     <section class="scene reserve" id="bu-gece" aria-labelledby="h-bugece" data-scene="reserve">
-      <h2 class="reserve__q voice" id="h-bugece">Bu gece?</h2>
+      <div class="reserve__head">
+        <h2 class="reserve__q voice" id="h-bugece" data-reveal>Bu gece?</h2>
+        <p class="reserve__lead" data-reveal>Talebinizi WhatsApp’tan iletin; <span>yer durumunu ekip teyit eder.</span></p>
+      </div>
 
       <form class="manifest" data-manifest novalidate>
-        <p class="manifest__lead">Talebinizi WhatsApp'tan iletin; <span>yer durumunu ekip teyit eder.</span></p>
-
         <div class="field field--date">
           <label class="field__label" for="f-date">Tarih</label>
           <input id="f-date" name="date" type="date" required />
@@ -321,9 +353,9 @@
         <fieldset class="field field--count">
           <legend class="field__label">Kişi</legend>
           <div class="stepper">
-            <button type="button" data-step="-1" aria-label="Bir kişi azalt">−</button>
+            <button type="button" data-step="-1" aria-label="Bir kişi azalt"><i class="stepper__minus" aria-hidden="true"></i></button>
             <input id="f-count" name="count" type="number" inputmode="numeric" min="1" max="60" value="2" aria-label="Kişi sayısı" />
-            <button type="button" data-step="1" aria-label="Bir kişi ekle">+</button>
+            <button type="button" data-step="1" aria-label="Bir kişi ekle"><i class="stepper__plus" aria-hidden="true"></i></button>
           </div>
         </fieldset>
 
@@ -339,20 +371,26 @@
           <input id="f-name" name="name" type="text" autocomplete="name" />
         </div>
 
-        <button class="send" type="submit">
-          <span class="send__label">WhatsApp'ta mesajı aç</span>
-          <span class="send__preview" data-preview aria-hidden="true"></span>
-        </button>
-        <p class="manifest__note" data-manifest-note>Bu bir ön taleptir, onay değildir. Mesaj WhatsApp'ta sizin gönderiminize hazır açılır; rezervasyon ekibin yanıtıyla kesinleşir.</p>
+        <div class="send-row">
+          <button class="btn btn--solid btn--lg send" type="submit"><span>WhatsApp’ta mesajı aç</span><i class="arrow" aria-hidden="true"></i></button>
+          <p class="send__preview" data-preview aria-hidden="true"></p>
+        </div>
+        <p class="manifest__note" data-manifest-note>Bu bir ön taleptir, onay değildir. Mesaj WhatsApp’ta sizin gönderiminize hazır açılır; rezervasyon ekibin yanıtıyla kesinleşir.</p>
       </form>
 
-      <ul class="channels">
-        <li><span class="meta">Telefon · WhatsApp</span><a href="tel:+905400025334">+90 540 002 53 34</a></li>
-        <li><span class="meta">E-posta</span><a href="mailto:rezervasyon@bogazdayiz.com">rezervasyon@bogazdayiz.com</a></li>
-        <li><span class="meta">Online</span><a href="https://bogazdayiz.com/reservation/">Rezervasyon sayfası</a></li>
-      </ul>
-
-      <p class="price"><span class="meta">Alkolsüz menü</span> 1.750 TL + KDV, sınırsız meşrubat dahil. <small>bogazdayiz.com'da listelenen fiyattır; güncel fiyatı rezervasyonda teyit edin.</small></p>
+      <aside class="reserve__side" aria-label="Diğer kanallar">
+        <ul class="channels">
+          <li><span class="meta">Telefon · WhatsApp</span><a href="tel:+905400025334">+90 540 002 53 34</a></li>
+          <li><span class="meta">E-posta</span><a href="mailto:rezervasyon@bogazdayiz.com">rezervasyon@bogazdayiz.com</a></li>
+          <li><span class="meta">Online</span><a href="https://bogazdayiz.com/reservation/">Rezervasyon sayfası</a></li>
+        </ul>
+        <div class="price">
+          <p class="meta">Alkolsüz menü</p>
+          <p class="price__amount">1.750 TL <small>+ KDV</small></p>
+          <p>Sınırsız meşrubat dahil.</p>
+          <small>bogazdayiz.com’da listelenen fiyattır; güncel fiyatı rezervasyonda teyit edin.</small>
+        </div>
+      </aside>
     </section>
   </main>
 
@@ -376,6 +414,52 @@
     </div>
     <p class="colophon__sign"><span>Boğazdayız</span> · Tosun Paşa restoran gemisi</p>
   </footer>
+
+  <!-- Dish detail. Filled from src/content/menu.ts; nothing here is invented. -->
+  <div class="dish" role="dialog" aria-modal="true" aria-labelledby="dish-name" hidden data-dish-modal>
+    <div class="dish__backdrop" data-dish-close></div>
+    <article class="dish__sheet" data-dish-sheet>
+      <figure class="dish__media" data-dish-media>
+        <div class="dish__plate plate" data-dish-plate><span data-dish-plate-name></span></div>
+      </figure>
+      <div class="dish__body" data-dish-body>
+        <header class="dish__top">
+          <p class="meta" data-dish-course></p>
+          <p class="meta dish__count" data-dish-count></p>
+        </header>
+        <h2 class="dish__name voice" id="dish-name" data-dish-name></h2>
+        <p class="dish__desc" data-dish-desc></p>
+        <dl class="dish__facts">
+          <div class="dish__fact" data-dish-ingredients-row>
+            <dt class="meta">İçerik</dt>
+            <dd><ul class="dish__list" data-dish-ingredients></ul></dd>
+          </div>
+          <div class="dish__fact">
+            <dt class="meta">Fiyat</dt>
+            <dd data-dish-price></dd>
+          </div>
+          <div class="dish__fact">
+            <dt class="meta">Alerjen</dt>
+            <dd data-dish-allergen></dd>
+          </div>
+        </dl>
+        <div class="dish__actions">
+          <a class="btn btn--solid" href="#bu-gece" data-dish-reserve><span data-dish-reserve-label>Rezervasyon</span><i class="arrow" aria-hidden="true"></i></a>
+          <div class="dish__nav">
+            <button type="button" class="dish__step" data-dish-prev aria-label="Önceki tabak"><i class="arrow arrow--back" aria-hidden="true"></i></button>
+            <button type="button" class="dish__step" data-dish-next aria-label="Sonraki tabak"><i class="arrow" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="dish__close" data-dish-close aria-label="Kapat"><span>Kapat</span><i class="cross" aria-hidden="true"></i></button>
+    </article>
+  </div>
+
+  <!-- Small screens: a quiet, persistent way to book. -->
+  <div class="dock" data-dock>
+    <p class="dock__info"><strong>19:30</strong> Kabataş · her gece</p>
+    <a class="btn btn--solid btn--sm" href="#bu-gece" tabindex="-1"><span>Rezervasyon</span></a>
+  </div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

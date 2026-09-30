@@ -10,16 +10,9 @@
 .shot picture, .shot img { width: 100%; height: 100%; }
 .shot img { object-fit: cover; }
 
-.shot--gemi { right: var(--gut); bottom: 3vh; width: 17vw; aspect-ratio: 4 / 3; }
-.shot--meze { right: 6vw; top: 18vh; width: 30vw; height: 64vh; z-index: -1; }
-.shot--kalamar { right: 8vw; bottom: 10vh; width: 26vw; aspect-ratio: 4 / 5; }
-.shot--izgara, .shot--balik { position: relative; width: min(22vw, 360px); aspect-ratio: 4 / 3; order: -1; }
-.shot--baklava { right: 6vw; top: 16vh; width: 36vw; height: 70vh; }
-.shot--muzik { right: 10vw; top: 12vh; width: 26vw; aspect-ratio: 3 / 4; }
-.shot--oryantal { left: 8vw; top: 14vh; width: 24vw; aspect-ratio: 3 / 4; }
-.shot--semazen { position: absolute; width: 34vmin; aspect-ratio: 1; border-radius: 50%; }
-.shot--dj { right: 8vw; bottom: 14vh; width: 28vw; aspect-ratio: 4 / 5; }
-.shot--bogaz { left: var(--gut); top: 18vh; width: 26vw; aspect-ratio: 4 / 5; opacity: 0.9; }
+.shot--gemi { right: var(--gut); bottom: 6vh; width: 20vw; aspect-ratio: 4 / 3; }
+.shot--semazen { position: absolute; width: 36%; aspect-ratio: 1; border-radius: 50%; }
+.shot--bogaz { left: var(--gut); top: 20vh; width: 22vw; aspect-ratio: 4 / 5; opacity: 0.92; }
 
 .shot--preview {
   border: 1px dashed currentColor;
@@ -29,5 +22,4 @@
 }
 .shot--preview figcaption { position: static; }
 
-.is-aerial .shot { position: relative; inset: auto; width: 72vw; height: auto; margin: 6vh 0; }
-.is-aerial .shot--semazen { position: absolute; width: 50vw; margin: 0; }
+.is-aerial .shot--gemi, .is-aerial .shot--bogaz { width: 46vw; }

@@ -19,13 +19,26 @@ npm run preview
   The hero words are reflected in the water from a glyph atlas (`src/gl/water.ts`).
 - **The director** (`src/director.ts`) maps scroll position to the camera, the clock (19:30 → 23:30) and the
   colour of the night. It uses keyframe tracks, so jumping to any point is exact.
-- **Scenes** (`src/scenes/*`): GSAP ScrollTrigger pins with scrubbed timelines. Each act on the stage has its own motion.
-- **Navigation** (`src/ui/route.ts`): a full-screen "tide" that lists the night's stations.
+- **Scenes** (`src/scenes/*`):
+  - hero: an entrance sequence where the words rise out of the water, plus a minimal CTA;
+  - timeline: five stops that light up on scroll, with a rolling clock;
+  - vessel: the camera boards Tosun Paşa through a lit window;
+  - menu: editorial, set on linen;
+  - stage: a still programme with one slow motion;
+  - return: 23:30, the shores rejoin;
+  - reservation.
+- **Menu** (`src/content/menu.ts`) is the single source for the dish dialog (`src/ui/dish.ts`). All 18 items open it.
+  The clicked plate flies into the dialog, and ← → / Esc / the back button work.
+  The menu is a fixed set, so every dish shows the set price. Ingredients appear only where the menu lists them,
+  and allergens are not published, so the dialog says so and links to WhatsApp.
+- **Navigation** (`src/ui/route.ts`): a full-screen "tide" that lists the night's stations. On small screens a
+  quiet booking dock sits at the bottom (`src/ui/reveal.ts`).
 - **Reservation** (`src/ui/reserve.ts`): builds a WhatsApp message for the real reservation line. It is not a
-  checkout and shows no fake confirmation.
+  checkout and shows no fake confirmation. From a main course's dialog, the form is pre-filled with that main.
 - Content lives in static, semantic HTML (`index.html`, with JSON-LD `Restaurant` + `Menu`) for SEO and no-JS.
 - Fonts: Anybody (variable width) and Newsreader, self-hosted and subset to Latin + Turkish (`scripts/fonts.py`).
-- Honours `prefers-reduced-motion`. Keyboard: skip link, focus-visible styles, a focus-trapped route dialog, Esc to close.
+- Honours `prefers-reduced-motion`: no pins, no glides, instant dialogs. Keyboard: skip link, focus-visible
+  styles, focus-trapped dialogs.
 
 ## İçerik kaynakları
 

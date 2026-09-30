@@ -20,7 +20,7 @@ export interface Marks {
 type Listener = (y: number) => void;
 
 /** Measured from the DOM by the scenes: where the words actually stand. */
-export const layout = { heroHorizon: 0.38, returnHorizon: 0.42 };
+export const layout = { heroHorizon: 0.38, returnHorizon: 0.42, clothClosed: 0 };
 
 const t = {
   horizon: new Track(0.38),
@@ -201,7 +201,7 @@ export class Director {
     }
     if (this.clockEl) this.clockEl.textContent = fmtTime(minutes);
     this.syncHull();
-    const light = this.windowCovers() || this.clothOnTop(y);
+    const light = this.windowCovers() || (this.clothOnTop(y) && layout.clothClosed < 0.55);
     this.chrome?.setAttribute('data-tone', light ? 'light' : 'dark');
     for (const fn of this.listeners) fn(y);
   }
@@ -209,7 +209,7 @@ export class Director {
   private clothOnTop(y: number) {
     const m = this.marks!;
     // the linen is under the header until the spotlight has closed most of the way
-    return y >= m.sofra.start - 40 && y < m.sofra.end - window.innerHeight * 0.3;
+    return y >= m.sofra.start - 40 && y < m.sofra.end;
   }
 
   /** true once the boarding window's light fills the frame */

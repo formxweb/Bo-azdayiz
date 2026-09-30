@@ -1,6 +1,8 @@
 import './styles/base.css';
 import './styles/chrome.css';
+import './styles/ui.css';
 import './styles/scenes.css';
+import './styles/dish.css';
 import './styles/media.css';
 
 import { gsap } from 'gsap';
@@ -9,7 +11,8 @@ import Lenis from 'lenis';
 
 import { WaterRenderer, water } from './gl/water';
 import { Director } from './director';
-import { heroScene, heroWords, followHorizon } from './scenes/hero';
+import { heroScene, heroWords, followHorizon, heroIntro } from './scenes/hero';
+import { timelineScene } from './scenes/timeline';
 import { vesselScene } from './scenes/vessel';
 import { sofraScene } from './scenes/sofra';
 import { stageScene } from './scenes/stage';
@@ -17,6 +20,8 @@ import { returnScene } from './scenes/return';
 import { route } from './ui/route';
 import { reserveForm } from './ui/reserve';
 import { mountMedia } from './ui/media';
+import { dishDialog } from './ui/dish';
+import { reveals, dock } from './ui/reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -34,6 +39,8 @@ const fontsReady = () =>
     ]).then(() => document.fonts.ready),
     new Promise((r) => setTimeout(r, 3000)),
   ]);
+
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 async function boot() {
   await fontsReady();
@@ -81,7 +88,7 @@ async function boot() {
 
     // scenes in document order so pin spacing resolves top-down
     const hero = heroScene(opts);
-    const strait = ScrollTrigger.create({ trigger: '#bogaz', start: 'top bottom', end: 'bottom top' });
+    const strait = timelineScene(opts);
     const vessel = vesselScene(opts);
     const sofra = sofraScene(opts);
     const stage = stageScene({ reduced, velocity: () => velocity });
@@ -93,6 +100,12 @@ async function boot() {
     ScrollTrigger.addEventListener('refresh', onRefresh);
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: () => d.update(window.scrollY) });
     if (!aerial && !reduced) d.onUpdate(followHorizon());
+    // the timeline is its own clock: the small one steps aside while it is read
+    const clock = document.querySelector('[data-clock-wrap]');
+    d.onUpdate((y) => {
+      const vh = window.innerHeight;
+      clock?.classList.toggle('is-hidden', y > strait.start + vh * 0.8 && y < strait.end - vh * 0.6);
+    });
 
     renderer?.setWords(words.texts, 'Anybody Hero', words.source);
     ScrollTrigger.refresh();
@@ -103,26 +116,40 @@ async function boot() {
     };
   });
 
-  route({
+  const lock = (locked: boolean) => {
+    if (lenis) locked ? lenis.stop() : lenis.start();
+    root.style.overflow = locked ? 'hidden' : '';
+  };
+  const scrollTo = (target: HTMLElement) => {
+    // pinned scenes live inside spacers: aim for the spacer's top
+    const st = ScrollTrigger.getAll().find((s) => s.trigger === target && s.pin);
+    const y = st ? st.start : target.getBoundingClientRect().top + window.scrollY;
+    if (lenis) lenis.scrollTo(y, { duration: 2.4, easing: (x) => (x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2) });
+    else window.scrollTo({ top: y, behavior: 'auto' });
+  };
+
+  route({ reduced: reducedQuery.matches, minutes: () => director?.minutes ?? 0, lock, scrollTo });
+  reserveForm();
+  dishDialog({
     reduced: reducedQuery.matches,
-    minutes: () => director?.minutes ?? 0,
-    lock: (locked) => {
-      if (lenis) locked ? lenis.stop() : lenis.start();
-      root.style.overflow = locked ? 'hidden' : '';
-    },
-    scrollTo: (target) => {
-      // pinned scenes live inside spacers: aim for the spacer's top
-      const st = ScrollTrigger.getAll().find((s) => s.trigger === target && s.pin);
-      const y = st ? st.start : target.getBoundingClientRect().top + window.scrollY;
-      if (lenis) lenis.scrollTo(y, { duration: 2.4, easing: (x) => (x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2) });
-      else window.scrollTo({ top: y, behavior: 'auto' });
+    lock,
+    reserve: (choice) => {
+      if (choice) {
+        const radio = document.querySelector<HTMLInputElement>(`input[name="main"][value="${choice}"]`);
+        if (radio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+      scrollTo(document.querySelector<HTMLElement>('#bu-gece')!);
     },
   });
-
-  reserveForm();
+  reveals(reducedQuery.matches);
+  dock();
   mountMedia().then((mounted) => mounted && ScrollTrigger.refresh());
 
   renderer?.start_();
+  heroIntro({ reduced: reducedQuery.matches, invalidate: () => renderer?.invalidate() });
   root.classList.add('is-ready');
   if (import.meta.env.DEV || new URLSearchParams(location.search).has('qa')) {
     Object.assign(window, { __water: water, __st: ScrollTrigger, __director: () => director });

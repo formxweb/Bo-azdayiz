@@ -14,6 +14,7 @@ export interface WaterState {
   bridgeApproach: number;
   bridgeVis: number;
   typeOn: number;
+  typeReveal: number;
   shipX: number;
   shipY: number;
   shipL: number;
@@ -32,6 +33,7 @@ export const water: WaterState = {
   bridgeApproach: 0,
   bridgeVis: 1,
   typeOn: 1,
+  typeReveal: 1.2,
   shipX: 1.6,
   shipY: 0.3,
   shipL: 0.7,
@@ -138,7 +140,7 @@ export class WaterRenderer {
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     const names = [
       'uRes', 'uTime', 'uNight', 'uHorizon', 'uFwd', 'uAerial', 'uZoom', 'uBridge', 'uType',
-      'uWordA', 'uWordB', 'uAtlasA', 'uAtlasB', 'uTypeOn', 'uShip', 'uShipOn', 'uRip',
+      'uWordA', 'uWordB', 'uAtlasA', 'uAtlasB', 'uTypeOn', 'uTypeReveal', 'uShip', 'uShipOn', 'uRip',
       'uExposure', 'uWarm',
     ];
     for (const n of names) this.u[n] = gl.getUniformLocation(p, n);
@@ -318,6 +320,7 @@ export class WaterRenderer {
       }
     }
     gl.uniform1f(u.uTypeOn, typeOn);
+    gl.uniform1f(u.uTypeReveal, s.typeReveal);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.typeTex);
     gl.drawArrays(gl.TRIANGLES, 0, 3);

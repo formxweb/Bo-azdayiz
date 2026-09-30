@@ -23,6 +23,7 @@ uniform vec4 uWordB;
 uniform vec4 uAtlasA;     // same words inside the atlas texture
 uniform vec4 uAtlasB;
 uniform float uTypeOn;
+uniform float uTypeReveal; // 0..1: how much of each word has risen from the water
 uniform vec4 uShip;       // focus point on screen (uv x, y), ship length (uv x), ship height (uv y)
 uniform float uShipOn;
 uniform vec4 uRip[6];     // uv x, uv y, age (s), strength
@@ -308,11 +309,13 @@ vec3 above(vec2 uv, float streak, float blur, float withType) {
     vec2 la = (uv - uWordA.xy) / (uWordA.zw - uWordA.xy);
     if (la.x > 0.0 && la.x < 1.0 && la.y > 0.0 && la.y < 1.0) {
       float t = texture2D(uType, mix(uAtlasA.xy, uAtlasA.zw, la), blur).a;
+      t *= 1.0 - smoothstep(uTypeReveal - 0.04, uTypeReveal, la.y);
       col = mix(col, ink, t * uTypeOn);
     }
     vec2 lb = (uv - uWordB.xy) / (uWordB.zw - uWordB.xy);
     if (lb.x > 0.0 && lb.x < 1.0 && lb.y > 0.0 && lb.y < 1.0) {
       float t = texture2D(uType, mix(uAtlasB.xy, uAtlasB.zw, lb), blur).a;
+      t *= 1.0 - smoothstep(uTypeReveal - 0.04, uTypeReveal, lb.y);
       col = mix(col, ink, t * uTypeOn);
     }
   }

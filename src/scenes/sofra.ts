@@ -1,57 +1,23 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { layout } from '../director';
 
 /**
- * 21:00. A long table, read sideways on landscape screens, downwards on portrait.
- * It ends when the lights are dimmed: the linen closes into a spotlight.
+ * 21:00. The menu, set on linen. It ends when the lights are dimmed:
+ * the cloth closes into a spotlight and the stage takes over.
  */
-export function sofraScene(opts: { aerial: boolean; reduced: boolean }) {
+export function sofraScene(opts: { reduced: boolean }) {
   const section = document.querySelector<HTMLElement>('#sofra')!;
   const cloth = section.querySelector<HTMLElement>('[data-cloth]')!;
-  const track = section.querySelector<HTMLElement>('[data-track]')!;
-  const closeup = section.querySelector<HTMLElement>('.closeup')!;
-  const plates = section.querySelectorAll<HTMLElement>('.plate');
+  const plates = section.querySelector<HTMLElement>('[data-plates]')!;
   const dim = section.querySelector<HTMLElement>('.course--dim')!;
   const dimLine = dim.querySelector<HTMLElement>('.dimline')!;
-  section.style.background = 'var(--ink)';
 
-  // a table lamp that leans toward the pointer
-  if (!opts.reduced && matchMedia('(pointer: fine)').matches) {
-    const lamp = { x: 50, y: 40 };
-    const apply = () => {
-      cloth.style.setProperty('--lamp-x', `${lamp.x.toFixed(2)}%`);
-      cloth.style.setProperty('--lamp-y', `${lamp.y.toFixed(2)}%`);
-    };
-    const lx = gsap.quickTo(lamp, 'x', { duration: 1.6, ease: 'power3', onUpdate: apply });
-    const ly = gsap.quickTo(lamp, 'y', { duration: 1.6, ease: 'power3', onUpdate: apply });
-    cloth.addEventListener('pointermove', (e) => {
-      const r = cloth.getBoundingClientRect();
-      lx(((e.clientX - r.left) / r.width) * 100);
-      ly(((e.clientY - r.top) / r.height) * 100);
-    });
-  }
+  plates.querySelectorAll<HTMLElement>('.plate-slot').forEach((el, i) => el.style.setProperty('--i', String(i)));
 
-  if (opts.reduced) {
-    return ScrollTrigger.create({ trigger: section, start: 'top top', end: 'bottom top' });
-  }
-
-  // baklava, katman katman: the word is cut into sheets that slide into register
-  const layered = section.querySelector<HTMLElement>('[data-layers]')!;
-  const SHEETS = 13;
-  const sweetText = layered.textContent ?? '';
-  const sheets = Array.from({ length: SHEETS }, (_, i) => {
-    const el = document.createElement('span');
-    el.className = 'sheet';
-    el.setAttribute('aria-hidden', 'true');
-    el.textContent = sweetText;
-    const top = (i / SHEETS) * 100;
-    const bottom = 100 - ((i + 1) / SHEETS) * 100;
-    el.style.clipPath = `inset(${top.toFixed(2)}% -2% calc(${bottom.toFixed(2)}% + 1.5px) -2%)`;
-    layered.appendChild(el);
-    return el;
-  });
-  layered.classList.add('is-layered');
-  const sheetOffset = (i: number) => (i % 2 ? 1 : -1) * (3 + ((i * 7) % 5) * 2.2);
+  // created after the spotlight pin below, so its end includes that pin's spacing
+  const makeRange = () => ScrollTrigger.create({ trigger: section, start: 'top top', end: 'bottom top' });
+  if (opts.reduced) return makeRange();
 
   /** spotlight centre, relative to the cloth box */
   const spot = () => {
@@ -59,68 +25,27 @@ export function sofraScene(opts: { aerial: boolean; reduced: boolean }) {
     const d = dimLine.getBoundingClientRect();
     return { x: d.left - c.left + d.width * 0.3, y: d.top - c.top + d.height * 0.5 };
   };
-
-  if (opts.aerial) {
-    gsap.fromTo(sheets, { xPercent: (i: number) => sheetOffset(i) }, {
-      xPercent: 0,
-      ease: 'none',
-      scrollTrigger: { trigger: layered, start: 'top bottom', end: 'center 55%', scrub: true },
-    });
-    ScrollTrigger.create({
-      trigger: dim,
-      start: 'top top',
-      end: () => `+=${window.innerHeight * 0.9}`,
-      pin: dim,
-      scrub: true,
-      invalidateOnRefresh: true,
-      onUpdate: (st) => {
-        if (st.progress <= 0) {
-          cloth.style.clipPath = 'none';
-          return;
-        }
-        const p = spot();
-        const r = gsap.utils.interpolate(160, 0, gsap.parseEase('power2.in')(st.progress));
-        cloth.style.clipPath = `circle(${r}vmax at ${p.x}px ${p.y}px)`;
-      },
-      onLeaveBack: () => (cloth.style.clipPath = 'none'),
-    });
-    return ScrollTrigger.create({ trigger: section, start: 'top top', end: 'bottom top' });
-  }
-
-  const distance = () => track.scrollWidth - window.innerWidth;
-  const tl = gsap.timeline({ defaults: { ease: 'none' } });
-  tl.to(track, { x: () => -distance(), duration: 1 }, 0)
-    // close-up words drift against the table: depth without a single image
-    .fromTo(closeup, { xPercent: 8 }, { xPercent: -14, duration: 0.45 }, 0.2)
-    .fromTo(plates, { rotate: -4 }, { rotate: 3, duration: 0.5, stagger: 0.01 }, 0)
-    .fromTo(sheets, { xPercent: (i: number) => sheetOffset(i) }, { xPercent: 0, duration: 0.2, ease: 'power2.out' }, 0.62)
-    .to({}, { duration: 0.08 })
-    .to(
-      { r: 150 },
-      {
-        r: 0,
-        duration: 0.34,
-        ease: 'power2.in',
-        onUpdate() {
-          const r = (this.targets()[0] as { r: number }).r;
-          if (r >= 149) {
-            cloth.style.clipPath = 'none';
-            return;
-          }
-          const p = spot();
-          cloth.style.clipPath = `circle(${r}vmax at ${p.x}px ${p.y}px)`;
-        },
-      },
-    );
-
-  return ScrollTrigger.create({
-    trigger: section,
+  const shrink = gsap.parseEase('power2.in');
+  ScrollTrigger.create({
+    trigger: dim,
     start: 'top top',
-    end: () => `+=${distance() + window.innerHeight * 0.9}`,
+    end: () => `+=${innerHeight * 0.9}`,
     pin: true,
-    scrub: true,
-    animation: tl,
     invalidateOnRefresh: true,
-    onLeaveBack: () => (cloth.style.clipPath = 'none'),
+    onUpdate: (st) => {
+      layout.clothClosed = st.progress;
+      if (st.progress <= 0.001) {
+        cloth.style.clipPath = 'none';
+        return;
+      }
+      const p = spot();
+      const r = gsap.utils.interpolate(150, 0, shrink(st.progress));
+      cloth.style.clipPath = `circle(${r.toFixed(2)}vmax at ${p.x.toFixed(1)}px ${p.y.toFixed(1)}px)`;
+    },
+    onLeaveBack: () => {
+      cloth.style.clipPath = 'none';
+      layout.clothClosed = 0;
+    },
   });
+  return makeRange();
 }

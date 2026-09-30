@@ -16,7 +16,9 @@ const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const src = path.join(root, 'media-source');
 const out = path.join(root, 'public/media');
 const WIDTHS = [480, 800, 1200, 1800, 2400];
-const SLOTS = new Set(['gemi', 'meze', 'kalamar', 'izgara', 'balik', 'baklava', 'muzik', 'oryantal', 'semazen', 'dj', 'bogaz']);
+const SLOTS = new Set(['gemi', 'semazen', 'bogaz']);
+const DISHES = new Set(['haydari', 'kisir', 'fava', 'borulce', 'tarator', 'enginar', 'peynir', 'domates', 'salatalik', 'patates', 'deniz', 'kalamar', 'borek', 'izgara', 'balik', 'baklava', 'meyve', 'mesrubat']);
+const known = (slot) => SLOTS.has(slot) || (slot.startsWith('menu-') && DISHES.has(slot.slice(5)));
 
 await mkdir(out, { recursive: true });
 const alts = existsSync(path.join(src, 'alt.json')) ? JSON.parse(await readFile(path.join(src, 'alt.json'), 'utf8')) : {};
@@ -27,7 +29,7 @@ for (const file of files) {
   const ext = path.extname(file).toLowerCase();
   const slot = path.basename(file, ext);
   if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) continue;
-  if (!SLOTS.has(slot)) {
+  if (!known(slot)) {
     console.warn(`skip ${file}: unknown slot "${slot}"`);
     continue;
   }

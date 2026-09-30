@@ -55,7 +55,7 @@ export function heroScene(opts: { aerial: boolean; reduced: boolean }) {
   const a = q('[data-word-a]', section);
   const b = q('[data-word-b]', section);
   const pre = q('.hero__pre', section);
-  const metas = section.querySelectorAll('.shore, .city__where, .city__when, .city__cue');
+  const metas = q('[data-city-ui]', section);
 
   const measure = () => {
     if (!opts.aerial) layout.heroHorizon = measureHorizon(section, '[data-word-a]');
@@ -105,4 +105,49 @@ export function followHorizon() {
     last = y;
     gsap.set([a, b], { y });
   };
+}
+
+/**
+ * Arrival. The water comes up out of the dark, the two shores rise from it
+ * (their reflections rising with them), then the quiet details settle in.
+ */
+export function heroIntro(opts: { reduced: boolean; invalidate: () => void }) {
+  const root = document.documentElement;
+  const section = q('#aksam');
+  const words = [q('[data-word-a]', section), q('[data-word-b]', section)];
+  const details = [...document.querySelectorAll<HTMLElement>('#aksam [data-intro]')];
+  const chrome = q('[data-chrome]');
+  if (opts.reduced) {
+    root.classList.remove('intro');
+    return;
+  }
+  const reveal = { p: 0 };
+  water.exposure = 0;
+  water.typeReveal = 0;
+  const clip = (p: number) => `inset(${((1 - p) * 100).toFixed(2)}% -12% -4% -12%)`;
+  gsap.set(words, { clipPath: clip(0), yPercent: 14 });
+  gsap.set(chrome, { opacity: 0 });
+  root.classList.remove('intro');
+  gsap.set(details, { opacity: 0, y: 14 });
+
+  gsap.timeline({ defaults: { overwrite: 'auto' } })
+    .to(water, { exposure: 1, duration: 2.6, ease: 'sine.inOut', onUpdate: opts.invalidate }, 0)
+    .to(reveal, {
+      p: 1,
+      duration: 1.9,
+      ease: 'expo.out',
+      onUpdate: () => {
+        const p = reveal.p;
+        water.typeReveal = p * 1.2;
+        opts.invalidate();
+        words.forEach((w) => (w.style.clipPath = clip(p * 1.15)));
+      },
+      onComplete: () => {
+        water.typeReveal = 1.2;
+        gsap.set(words, { clearProps: 'clipPath' });
+      },
+    }, 0.55)
+    .to(words, { yPercent: 0, duration: 2, ease: 'expo.out', stagger: 0.08 }, 0.55)
+    .to(chrome, { opacity: 1, duration: 1.2, ease: 'power2.out', clearProps: 'opacity' }, 1.2)
+    .to(details, { opacity: 1, y: 0, duration: 1.3, ease: 'expo.out', stagger: 0.09, clearProps: 'transform,opacity' }, 1.35);
 }

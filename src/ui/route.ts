@@ -101,7 +101,7 @@ export function route(opts: RouteOpts) {
   );
 
   // in-page links outside the panel use the same camera move
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not([data-route] a)').forEach((a) =>
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not([data-route] a):not([data-dish-reserve])').forEach((a) =>
     a.addEventListener('click', (e) => {
       const target = document.querySelector<HTMLElement>(a.getAttribute('href')!);
       if (!target) return;

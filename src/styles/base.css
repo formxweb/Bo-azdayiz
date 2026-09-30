@@ -76,9 +76,9 @@
   --char-60: rgb(17 21 28 / 0.62);
   --char-20: rgb(17 21 28 / 0.2);
   --sodium: #ff9147;
-  --port: #ea3a2c;
-  --stbd: #22c46f;
-  --nar: #b8322a;
+  /* the one warm accent: a Bosphorus street lamp, never gold */
+  --accent: #ec9a5e;
+  --accent-soft: rgb(236 154 94 / 0.14);
 
   --f-struct: 'Anybody', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --f-hero: 'Anybody Hero', 'Anybody', 'Arial Narrow', Impact, sans-serif;
@@ -87,6 +87,8 @@
   --gut: clamp(16px, 2.6vw, 44px);
   --ease-camera: cubic-bezier(0.65, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.2, 0.7, 0.1, 1);
+  /* long, settling ease used by every hover and reveal */
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
   --vh: 1vh;
 }
 @supports (height: 1svh) {
@@ -122,7 +124,7 @@ a { color: inherit; text-decoration: none; }
 button, input { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; padding: 0; }
 img, svg, canvas { display: block; }
-::selection { background: var(--sodium); color: var(--ink); }
+::selection { background: var(--accent); color: var(--ink); }
 
 :focus { outline: none; }
 :focus-visible {

@@ -3,6 +3,9 @@
  * from type, light and the rendered strait. When the brand's own photographs
  * are dropped into /media-source and `npm run media` is run, they appear here,
  * art-directed into the scenes. Nothing is ever filled with stock or generated imagery.
+ *
+ * Dish photographs use the slot name `menu-<dish id>` (ids in src/content/menu.ts):
+ * they fill the plate on the menu and the image side of the dish dialog.
  */
 export interface Slot {
   /** element the photograph is layered into */
@@ -14,18 +17,12 @@ export interface Slot {
 }
 
 export const slots: Record<string, Slot> = {
-  gemi: { anchor: '#iskele .vessel__frame', sizes: '(max-aspect-ratio: 4/5) 60vw, 26vw', alt: 'Tosun Paşa, Kabataş İskelesi’nde gece' },
-  meze: { anchor: '.course--meze', sizes: '(max-aspect-ratio: 4/5) 90vw, 34vw', alt: 'Tosun Paşa’da meze sofrası' },
-  kalamar: { anchor: '.course--ara', sizes: '(max-aspect-ratio: 4/5) 70vw, 30vw', alt: 'Kalamar, dip sosla' },
-  izgara: { anchor: '.dish--izgara', sizes: '(max-aspect-ratio: 4/5) 60vw, 22vw', alt: 'Karışık Izgara Tabağı' },
-  balik: { anchor: '.dish--balik', sizes: '(max-aspect-ratio: 4/5) 60vw, 22vw', alt: 'Izgara balık' },
-  baklava: { anchor: '.course--tatli', sizes: '(max-aspect-ratio: 4/5) 80vw, 38vw', alt: 'Baklava' },
-  muzik: { anchor: '[data-act="muzik"]', sizes: '(max-aspect-ratio: 4/5) 70vw, 28vw', alt: 'Tosun Paşa’da canlı müzik' },
-  oryantal: { anchor: '[data-act="oryantal"]', sizes: '(max-aspect-ratio: 4/5) 70vw, 26vw', alt: 'Oryantal gösteri' },
-  semazen: { anchor: '[data-act="semazen"] .whirl', sizes: '(max-aspect-ratio: 4/5) 64vw, 34vmin', alt: 'Semazen gösterisi' },
-  dj: { anchor: '[data-act="dj"]', sizes: '(max-aspect-ratio: 4/5) 70vw, 30vw', alt: 'DJ performansı' },
-  bogaz: { anchor: '#donus', sizes: '(max-aspect-ratio: 4/5) 80vw, 30vw', alt: 'Tosun Paşa güvertesinden gece Boğaz' },
+  gemi: { anchor: '#iskele .vessel__frame', sizes: '(max-aspect-ratio: 4/5) 60vw, 22vw', alt: 'Tosun Paşa, Kabataş İskelesi’nde gece' },
+  semazen: { anchor: '.whirl', sizes: '(max-aspect-ratio: 4/5) 40vw, 20vw', alt: 'Tosun Paşa’da semazen gösterisi' },
+  bogaz: { anchor: '#donus', sizes: '(max-aspect-ratio: 4/5) 70vw, 24vw', alt: 'Tosun Paşa güvertesinden gece Boğaz' },
 };
+
+export const dishSizes = '(max-width: 820px) 100vw, 50vw';
 
 export interface ManifestEntry {
   w: number;
