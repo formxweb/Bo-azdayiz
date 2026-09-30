@@ -79,8 +79,18 @@ export function stageScene(opts: { reduced: boolean; velocity: () => number }) {
   // ── dj: bands of light slide with the speed of the scroll
   const dj = section.querySelector<HTMLElement>('[data-act="dj"]')!;
   const djTitle = dj.querySelector<HTMLElement>('[data-dj]')!;
+  const djText = djTitle.textContent ?? '';
+  const echoes = Array.from({ length: 5 }, () => {
+    const e = document.createElement('span');
+    e.className = 'echo';
+    e.setAttribute('aria-hidden', 'true');
+    e.textContent = djText;
+    djTitle.appendChild(e);
+    return e;
+  });
   watch(dj, 'dj');
-  let shift = 0;
+  let drag = 0;
+  let beat = 0;
 
   gsap.ticker.add((_time, dt) => {
     if (!inView.size) return;
@@ -118,10 +128,15 @@ export function stageScene(opts: { reduced: boolean; velocity: () => number }) {
     }
 
     if (inView.has('dj')) {
-      shift += (1.2 + Math.abs(v) * 0.02) * k;
-      const band = 4 + Math.min(Math.abs(v) * 0.01, 14);
-      djTitle.style.setProperty('--shift', `${shift.toFixed(1)}px`);
-      djTitle.style.setProperty('--band', `${band.toFixed(1)}px`);
+      // echoes trail the scroll, and pulse on a slow four-count when it is still
+      drag += (Math.max(-900, Math.min(900, v)) * 0.05 - drag) * 0.12 * k;
+      beat += 0.035 * k;
+      const pulse = Math.pow(Math.max(0, Math.sin(beat * Math.PI)), 8) * 10;
+      echoes.forEach((e, i) => {
+        const n = i + 1;
+        e.style.transform = `translate3d(${(n * (pulse * 0.6 + Math.abs(drag) * 0.35)).toFixed(1)}px, ${(n * drag).toFixed(1)}px, 0)`;
+        e.style.opacity = String(Math.min(1, (pulse / 10) * 0.8 + Math.abs(drag) / 30) * (1 - i * 0.16));
+      });
     }
   });
 

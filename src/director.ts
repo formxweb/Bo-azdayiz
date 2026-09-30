@@ -56,6 +56,7 @@ export class Director {
     private readonly opts: { aerial: boolean; reduced: boolean },
   ) {
     water.aerial = opts.aerial ? 1 : 0;
+    Track.stepped = opts.reduced;
   }
 
   onUpdate(fn: Listener) {
@@ -103,7 +104,7 @@ export class Director {
     t.active.key(cloth - 1, 1, ease.linear).key(cloth, 0, ease.linear).key(D0 - vh - 2, 0, ease.linear).key(D0 - vh - 1, 1, ease.linear);
 
     if (this.opts.aerial) {
-      this.base = { L: 0.3, H: 0.085, focusY: 0.45 };
+      this.base = { L: 0.3, H: 0.085, focusY: 0.27 };
       t.zoom
         .key(H0, 1)
         .key(H1, 2.3, ease.camera)

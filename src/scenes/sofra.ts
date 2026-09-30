@@ -35,6 +35,24 @@ export function sofraScene(opts: { aerial: boolean; reduced: boolean }) {
     return ScrollTrigger.create({ trigger: section, start: 'top top', end: 'bottom top' });
   }
 
+  // baklava, katman katman: the word is cut into sheets that slide into register
+  const layered = section.querySelector<HTMLElement>('[data-layers]')!;
+  const SHEETS = 13;
+  const sweetText = layered.textContent ?? '';
+  const sheets = Array.from({ length: SHEETS }, (_, i) => {
+    const el = document.createElement('span');
+    el.className = 'sheet';
+    el.setAttribute('aria-hidden', 'true');
+    el.textContent = sweetText;
+    const top = (i / SHEETS) * 100;
+    const bottom = 100 - ((i + 1) / SHEETS) * 100;
+    el.style.clipPath = `inset(${top.toFixed(2)}% -2% calc(${bottom.toFixed(2)}% + 1.5px) -2%)`;
+    layered.appendChild(el);
+    return el;
+  });
+  layered.classList.add('is-layered');
+  const sheetOffset = (i: number) => (i % 2 ? 1 : -1) * (3 + ((i * 7) % 5) * 2.2);
+
   /** spotlight centre, relative to the cloth box */
   const spot = () => {
     const c = cloth.getBoundingClientRect();
@@ -43,6 +61,11 @@ export function sofraScene(opts: { aerial: boolean; reduced: boolean }) {
   };
 
   if (opts.aerial) {
+    gsap.fromTo(sheets, { xPercent: (i: number) => sheetOffset(i) }, {
+      xPercent: 0,
+      ease: 'none',
+      scrollTrigger: { trigger: layered, start: 'top bottom', end: 'center 55%', scrub: true },
+    });
     ScrollTrigger.create({
       trigger: dim,
       start: 'top top',
@@ -70,6 +93,7 @@ export function sofraScene(opts: { aerial: boolean; reduced: boolean }) {
     // close-up words drift against the table: depth without a single image
     .fromTo(closeup, { xPercent: 8 }, { xPercent: -14, duration: 0.45 }, 0.2)
     .fromTo(plates, { rotate: -4 }, { rotate: 3, duration: 0.5, stagger: 0.01 }, 0)
+    .fromTo(sheets, { xPercent: (i: number) => sheetOffset(i) }, { xPercent: 0, duration: 0.2, ease: 'power2.out' }, 0.62)
     .to({}, { duration: 0.08 })
     .to(
       { r: 150 },

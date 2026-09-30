@@ -44,5 +44,7 @@ Please verify the price and the dinner/show times with the team before launch.
 ## Photographs
 
 No brand photographs were available, so no stock or generated images are used anywhere.
-The scenes are complete without photos. Slots for real photos are defined in `src/content/media.ts`;
-open the site with `?media=preview` to see where they go.
+The scenes are complete without photos. To add the brand's own photographs, put them in `media-source/`
+(file names = slots, see `media-source/README.md`) and run `npm run media` (sharp → AVIF/WebP at 480–2400w + manifest).
+They are then placed into their scenes with lazy loading and `srcset`. Open the site with `?media=preview`
+to see the placements without photos.

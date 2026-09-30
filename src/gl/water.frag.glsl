@@ -380,9 +380,9 @@ vec3 horizonView(vec2 uv) {
     float wl = uShip.y - SHIP_FOCUS.y * uShip.w;
     if (uv.y < wl) {
       float sd = wl - uv.y;
-      vec2 rs = vec2(uv.x + g.x * (0.004 + 0.06 * sd), wl + sd + g.y * (0.01 + 0.9 * sd));
+      vec2 rs = vec2(uv.x + g.x * (0.03 + 0.14 * sd), wl + sd + g.y * (0.06 + 1.4 * sd));
       vec4 sr = shipLayer(rs);
-      refl = mix(refl, sr.rgb * 0.85, sr.a * 0.95);
+      refl = mix(refl, sr.rgb * 0.7, sr.a * 0.9);
     }
   }
 
@@ -414,8 +414,9 @@ vec3 cityGlow(vec2 w, float px, float dx) {
   float ang = fbm(w * 0.9 + 11.0) * 2.4;
   vec2 gp = mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * w * 150.0;
   vec2 gf = abs(fract(gp) - 0.5);
-  float lineW = px * 150.0 * 0.9;
-  float street = smoothstep(lineW, 0.0, min(gf.x, gf.y)) * dens;
+  // blocks shrink to a few pixels when the camera rises: fade the grid before it aliases
+  float blockPx = 1.0 / (150.0 * px);
+  float street = smoothstep(0.1, 0.0, min(gf.x, gf.y)) * dens * smoothstep(5.0, 12.0, blockPx);
   vec3 col = SODIUM * street * 0.34;
   col += SODIUM * dens * 0.07; // haze over the lit districts
 
@@ -432,9 +433,6 @@ vec3 cityGlow(vec2 w, float px, float dx) {
       col += lightTint(fract(r * 7.3)) * exp(-dot(d, d) / 1.1) * (0.45 + 0.8 * fract(r * 17.0));
     }
   }
-  // arterial roads: brighter, whiter
-  float art = abs(fbm(w * 1.1 + 2.0) - 0.5);
-  col += WARMW * smoothstep(px * 2.5, 0.0, art * 0.15) * 0.5 * smoothstep(0.0, 0.03, dx);
   return col;
 }
 

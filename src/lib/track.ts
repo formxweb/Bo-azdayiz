@@ -20,6 +20,8 @@ interface Key {
 }
 
 export class Track {
+  /** reduced motion: hold each value and cut to the next, never glide */
+  static stepped = false;
   private keys: Key[] = [];
   constructor(private readonly fallback: number) {}
 
@@ -45,6 +47,7 @@ export class Track {
       if (y <= k[i].y) {
         const a = k[i - 1];
         const b = k[i];
+        if (Track.stepped) return y < b.y ? a.v : b.v;
         const span = b.y - a.y || 1;
         return a.v + (b.v - a.v) * b.e((y - a.y) / span);
       }

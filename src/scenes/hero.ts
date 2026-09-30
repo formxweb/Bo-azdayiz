@@ -69,8 +69,9 @@ export function heroScene(opts: { aerial: boolean; reduced: boolean }) {
 
   const tl = gsap.timeline({ defaults: { ease: 'none' } });
   if (opts.aerial) {
-    tl.to(a, { xPercent: -130, ease: 'power2.in', duration: 0.8 }, 0)
-      .to(b, { xPercent: 130, ease: 'power2.in', duration: 0.8 }, 0)
+    // the camera lowers onto the water: both banks slide out of frame
+    tl.to(a, { x: () => -window.innerWidth * 0.55, ease: 'power2.in', duration: 0.8 }, 0)
+      .to(b, { x: () => window.innerWidth * 0.55, ease: 'power2.in', duration: 0.8 }, 0)
       .to(pre, { autoAlpha: 0, duration: 0.3 }, 0.05)
       .to(metas, { autoAlpha: 0, duration: 0.25 }, 0);
   } else {
