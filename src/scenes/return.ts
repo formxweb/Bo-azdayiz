@@ -44,7 +44,7 @@ export function returnScene(opts: { aerial: boolean; reduced: boolean }) {
   return ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: () => `+=${window.innerHeight * 1.4}`,
+    end: () => `+=${window.innerHeight * 1.0}`,
     pin: true,
     scrub: true,
     animation: tl,

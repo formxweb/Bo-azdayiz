@@ -67,7 +67,7 @@
 .dish__top { display: flex; justify-content: space-between; gap: 16px; color: var(--paper-60); padding-right: 110px; }
 .dish__count { font-variant-numeric: tabular-nums; }
 .dish__name {
-  font-size: clamp(40px, 4.2vw, 78px);
+  font-size: clamp(36px, 3.6vw, 64px);
   line-height: 0.96;
   letter-spacing: -0.02em;
   margin: 6vh 0 2.6vh;
@@ -86,11 +86,11 @@
 .dish__fact[hidden] { display: none; }
 .dish__fact dt { color: var(--paper-60); padding-top: 4px; }
 .dish__fact dd { margin: 0; font-size: 16px; line-height: 1.5; }
-.dish__fact dd small { display: block; color: var(--paper-35); font-size: 13px; margin-top: 4px; }
+.dish__fact dd small { display: block; color: var(--paper-muted); font-size: 13px; margin-top: 4px; }
 .dish__fact dd a { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; transition: color 0.4s; }
 .dish__fact dd a:hover { color: var(--accent); }
 .dish__list { display: flex; flex-wrap: wrap; gap: 4px 0; }
-.dish__list li:not(:last-child)::after { content: '·'; margin: 0 0.55em; color: var(--paper-35); }
+.dish__list li:not(:last-child)::after { content: '·' / ''; margin: 0 0.55em; color: var(--paper-muted); }
 .dish__actions {
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@
   display: grid;
   place-items: center;
   box-shadow: inset 0 0 0 1px var(--paper-35);
-  transition: box-shadow 0.5s var(--ease-lux), color 0.5s var(--ease-lux);
+  transition: box-shadow var(--dur-hover) ease, color var(--dur-hover) ease;
 }
 .dish__step:hover, .dish__step:focus-visible { box-shadow: inset 0 0 0 1px var(--paper); color: var(--accent); }
 .dish__step .arrow { width: 16px; }
@@ -118,7 +118,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 0;
+  min-height: 44px;
+  padding: 0 4px;
   font-family: var(--f-struct);
   font-stretch: 125%;
   font-size: 10.5px;
@@ -126,7 +127,7 @@
   text-transform: uppercase;
   color: var(--paper);
 }
-.dish__close .cross { transition: transform 0.8s var(--ease-lux); }
+.dish__close .cross { transition: transform var(--dur-hover) var(--ease-lux); }
 .dish__close:hover .cross { transform: rotate(90deg); }
 
 @media (max-width: 820px) {

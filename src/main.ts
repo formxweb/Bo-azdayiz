@@ -17,7 +17,7 @@ import { vesselScene } from './scenes/vessel';
 import { sofraScene } from './scenes/sofra';
 import { stageScene } from './scenes/stage';
 import { returnScene } from './scenes/return';
-import { route } from './ui/route';
+import { nav } from './ui/nav';
 import { reserveForm } from './ui/reserve';
 import { mountMedia } from './ui/media';
 import { dishDialog } from './ui/dish';
@@ -62,16 +62,6 @@ async function boot() {
     gsap.ticker.lagSmoothing(0);
   }
 
-  // scroll speed, smoothed and decaying: the stage acts listen to it
-  let velocity = 0;
-  let lastY = window.scrollY;
-  gsap.ticker.add((_t, dt) => {
-    const y = window.scrollY;
-    const inst = ((y - lastY) / Math.max(dt, 1)) * 1000;
-    lastY = y;
-    velocity += (inst - velocity) * 0.18;
-  });
-
   let director: Director | null = null;
   const words = heroWords();
 
@@ -91,7 +81,7 @@ async function boot() {
     const strait = timelineScene(opts);
     const vessel = vesselScene(opts);
     const sofra = sofraScene(opts);
-    const stage = stageScene({ reduced, velocity: () => velocity });
+    const stage = stageScene({ reduced });
     const ret = returnScene(opts);
     const reserve = ScrollTrigger.create({ trigger: '#bu-gece', start: 'top bottom', end: 'bottom bottom' });
 
@@ -100,12 +90,6 @@ async function boot() {
     ScrollTrigger.addEventListener('refresh', onRefresh);
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: () => d.update(window.scrollY) });
     if (!aerial && !reduced) d.onUpdate(followHorizon());
-    // the timeline is its own clock: the small one steps aside while it is read
-    const clock = document.querySelector('[data-clock-wrap]');
-    d.onUpdate((y) => {
-      const vh = window.innerHeight;
-      clock?.classList.toggle('is-hidden', y > strait.start + vh * 0.8 && y < strait.end - vh * 0.6);
-    });
 
     renderer?.setWords(words.texts, 'Anybody Hero', words.source);
     ScrollTrigger.refresh();
@@ -128,7 +112,7 @@ async function boot() {
     else window.scrollTo({ top: y, behavior: 'auto' });
   };
 
-  route({ reduced: reducedQuery.matches, minutes: () => director?.minutes ?? 0, lock, scrollTo });
+  nav({ reduced: reducedQuery.matches, lock, scrollTo, heroEnd: () => director?.heroEnd ?? window.innerHeight });
   reserveForm();
   dishDialog({
     reduced: reducedQuery.matches,

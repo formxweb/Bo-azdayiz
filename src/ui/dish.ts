@@ -145,21 +145,21 @@ export function dishDialog(opts: DishOpts) {
     }
 
     const tl = gsap.timeline({ onComplete: done });
-    tl.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
-      .fromTo(sheet, { opacity: 0, clipPath: 'inset(5% 3% 5% 3%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'expo.out', clearProps: 'clipPath' }, 0.05)
-      .fromTo(bodyParts(), { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1, stagger: 0.06, ease: 'expo.out', clearProps: 'transform' }, 0.35);
+    tl.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' }, 0)
+      .fromTo(sheet, { opacity: 0, clipPath: 'inset(5% 3% 5% 3%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.65, ease: 'expo.out', clearProps: 'clipPath' }, 0.03)
+      .fromTo(bodyParts(), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.04, ease: 'expo.out', clearProps: 'transform' }, 0.2);
 
     if (isPlate(trigger) && onScreen(trigger)) {
       const f = flyer(trigger.getBoundingClientRect(), plate.getBoundingClientRect());
       trigger.classList.add('is-lifted');
       gsap.set(plate, { opacity: 0 });
-      tl.fromTo(f.el, { x: f.x, y: f.y, scale: f.s }, { x: 0, y: 0, scale: 1, duration: 1.15, ease: 'expo.inOut' }, 0)
+      tl.fromTo(f.el, { x: f.x, y: f.y, scale: f.s }, { x: 0, y: 0, scale: 1, duration: 0.7, ease: 'expo.inOut' }, 0)
         .add(() => {
           gsap.set(plate, { opacity: 1 });
           f.el.remove();
         });
     } else {
-      tl.fromTo(plate, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 1.2, ease: 'expo.out' }, 0.15);
+      tl.fromTo(plate, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.7, ease: 'expo.out' }, 0.1);
     }
   };
 
@@ -185,18 +185,18 @@ export function dishDialog(opts: DishOpts) {
       return;
     }
     const tl = gsap.timeline({ onComplete: finish });
-    tl.to(bodyParts(), { opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
-      .to(sheet, { opacity: 0, duration: 0.55, ease: 'power2.inOut' }, 0.12)
-      .to(backdrop, { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, 0.15);
+    tl.to(bodyParts(), { opacity: 0, duration: 0.18, ease: 'power2.in' }, 0)
+      .to(sheet, { opacity: 0, duration: 0.32, ease: 'power2.inOut' }, 0.08)
+      .to(backdrop, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 0.1);
     if (isPlate(src) && src && onScreen(src)) {
       const f = flyer(src.getBoundingClientRect(), plate.getBoundingClientRect());
       gsap.set(plate, { opacity: 0 });
-      tl.to(f.el, { x: f.x, y: f.y, scale: f.s, duration: 0.95, ease: 'expo.inOut' }, 0).add(() => {
+      tl.to(f.el, { x: f.x, y: f.y, scale: f.s, duration: 0.6, ease: 'expo.inOut' }, 0).add(() => {
         src.classList.remove('is-lifted');
         f.el.remove();
       });
     } else {
-      tl.to(plate, { opacity: 0, scale: 0.9, duration: 0.5, ease: 'power2.in' }, 0);
+      tl.to(plate, { opacity: 0, scale: 0.94, duration: 0.3, ease: 'power2.in' }, 0);
     }
   };
 
@@ -218,11 +218,11 @@ export function dishDialog(opts: DishOpts) {
       return;
     }
     gsap.timeline({ onComplete: () => void (busy = false) })
-      .to(plate, { opacity: 0, x: -40 * dir, duration: 0.35, ease: 'power2.in' }, 0)
-      .to(parts, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
+      .to(plate, { opacity: 0, x: -28 * dir, duration: 0.22, ease: 'power2.in' }, 0)
+      .to(parts, { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0)
       .add(swap)
-      .fromTo(plate, { opacity: 0, x: 40 * dir }, { opacity: 1, x: 0, duration: 0.9, ease: 'expo.out' })
-      .fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.05, ease: 'expo.out', clearProps: 'transform' }, '<0.05');
+      .fromTo(plate, { opacity: 0, x: 28 * dir }, { opacity: 1, x: 0, duration: 0.55, ease: 'expo.out' })
+      .fromTo(parts, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.035, ease: 'expo.out', clearProps: 'transform' }, '<0.03');
   };
 
   document.querySelectorAll<HTMLElement>('[data-dish]').forEach((el) =>

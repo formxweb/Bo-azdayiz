@@ -67,6 +67,9 @@ export class WaterRenderer {
   private scale = 1;
   private frameTimes: number[] = [];
   private lastPointer = { x: -1, y: -1, t: 0 };
+  /** last scroll or pointer activity; when the page is idle the water runs at half rate */
+  private lastActive = performance.now();
+  private tick = 0;
   active = true;
 
   constructor(
@@ -221,6 +224,7 @@ export class WaterRenderer {
   }
 
   private onPointer = (e: PointerEvent) => {
+    this.lastActive = performance.now();
     if (!this.active || e.pointerType === 'touch') return;
     const p = this.toUv(e.clientX, e.clientY);
     if (!this.onWater(p.y)) return;
@@ -240,6 +244,7 @@ export class WaterRenderer {
 
   invalidate() {
     this.dirty = true;
+    this.lastActive = performance.now();
   }
 
   start_() {
@@ -258,6 +263,7 @@ export class WaterRenderer {
     this.raf = requestAnimationFrame(this.frame);
     if (!this.active) return;
     if (this.opts.still && !this.dirty) return;
+    if (!this.dirty && now - this.lastActive > 2500 && this.tick++ % 2) return;
     const t0 = performance.now();
     this.draw(now);
     this.dirty = false;

@@ -1,7 +1,7 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { water, SHIP_FOCUS, type WaterRenderer } from './gl/water';
 import { Track, ease, clamp, range } from './lib/track';
-import { fmtTime, schedule } from './content/brand';
+import { schedule } from './content/brand';
 
 /**
  * The director turns one number — how far into the night you have scrolled —
@@ -45,7 +45,6 @@ export class Director {
   private marks: Marks | null = null;
   private listeners: Listener[] = [];
   private lastY = -1;
-  private readonly clockEl = document.querySelector<HTMLElement>('[data-clock]');
   private readonly chrome = document.querySelector<HTMLElement>('[data-chrome]');
   private readonly hull = document.querySelector<HTMLElement>('[data-hull]');
   private base = { L: 0.9, H: 0.2, focusY: 0.35 };
@@ -61,6 +60,11 @@ export class Director {
 
   onUpdate(fn: Listener) {
     this.listeners.push(fn);
+  }
+
+  /** scroll position where the hero scene ends */
+  get heroEnd() {
+    return this.marks?.hero.end ?? window.innerHeight;
   }
 
   setMarks(m: Marks) {
@@ -199,7 +203,6 @@ export class Director {
       this.renderer.active = t.active.at(y) > 0.5;
       this.renderer.invalidate();
     }
-    if (this.clockEl) this.clockEl.textContent = fmtTime(minutes);
     this.syncHull();
     const light = this.windowCovers() || (this.clothOnTop(y) && layout.clothClosed < 0.55);
     this.chrome?.setAttribute('data-tone', light ? 'light' : 'dark');

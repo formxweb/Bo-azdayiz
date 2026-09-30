@@ -67,18 +67,29 @@
 :root {
   --ink: #06080d;
   --ink-2: #0c121c;
+  /* night surfaces */
   --paper: #ece5d8;
-  --paper-60: rgb(236 229 216 / 0.6);
-  --paper-35: rgb(236 229 216 / 0.35);
-  --paper-15: rgb(236 229 216 / 0.15);
+  --paper-60: rgb(236 229 216 / 0.6);   /* secondary text on night, 6:1 */
+  --paper-muted: rgb(236 229 216 / 0.52); /* smallest readable text on night, 4.8:1 */
+  --paper-35: rgb(236 229 216 / 0.35);  /* borders and controls only, never text */
+  --paper-15: rgb(236 229 216 / 0.15);  /* hairlines */
+  /* linen surfaces */
   --cloth: #efe8dc; /* == CREAM in water.frag.glsl */
   --char: #11151c;
-  --char-60: rgb(17 21 28 / 0.62);
-  --char-20: rgb(17 21 28 / 0.2);
-  --sodium: #ff9147;
-  /* the one warm accent: a Bosphorus street lamp, never gold */
+  --char-60: rgb(17 21 28 / 0.66);      /* secondary text on linen, 5.3:1 */
+  --char-20: rgb(17 21 28 / 0.2);       /* hairlines on linen */
+  /* the one warm accent: a Bosphorus street lamp, never gold. Used for state, not decoration. */
   --accent: #ec9a5e;
   --accent-soft: rgb(236 154 94 / 0.14);
+
+  /* type scale: one display size for every section title, one for items */
+  --t-h2: clamp(42px, 5.4vw, 100px);
+  --t-item: clamp(28px, 2.9vw, 50px);
+  --t-lead: clamp(18px, 1.35vw, 22px);
+
+  /* motion: hovers answer quickly, reveals settle once */
+  --dur-hover: 0.35s;
+  --dur-reveal: 0.8s;
 
   --f-struct: 'Anybody', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --f-hero: 'Anybody Hero', 'Anybody', 'Arial Narrow', Impact, sans-serif;
@@ -87,8 +98,9 @@
   --gut: clamp(16px, 2.6vw, 44px);
   --ease-camera: cubic-bezier(0.65, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.2, 0.7, 0.1, 1);
-  /* long, settling ease used by every hover and reveal */
-  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
+  /* settling ease used by every hover and reveal */
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+  --header-h: 64px;
   --vh: 1vh;
 }
 @supports (height: 1svh) {
@@ -110,7 +122,7 @@ body {
   margin: 0;
   font-family: var(--f-voice);
   font-size: 17px;
-  line-height: 1.45;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -146,7 +158,10 @@ img, svg, canvas { display: block; }
   z-index: 100;
   left: var(--gut);
   top: 12px;
-  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--f-struct);
@@ -193,15 +208,6 @@ img, svg, canvas { display: block; }
   letter-spacing: 0;
   line-height: 0.8;
   font-variant-numeric: tabular-nums;
-}
-.sep {
-  display: inline-block;
-  width: 2.4em;
-  height: 1px;
-  background: currentColor;
-  vertical-align: middle;
-  margin: 0 0.8em;
-  opacity: 0.6;
 }
 
 /* ─────────────────────────── the water ─────────────────────────── */

@@ -17,22 +17,24 @@ npm run preview
 - **One WebGL pass** (`src/gl/water.frag.glsl`) renders the Bosphorus behind every scene. It has two cameras:
   eye level facing north on landscape screens, and an aerial view of the strait on portrait screens.
   The hero words are reflected in the water from a glyph atlas (`src/gl/water.ts`).
-- **The director** (`src/director.ts`) maps scroll position to the camera, the clock (19:30 → 23:30) and the
+- **The director** (`src/director.ts`) maps scroll position to the camera, the hour of the night (19:30 → 23:30) and the
   colour of the night. It uses keyframe tracks, so jumping to any point is exact.
 - **Scenes** (`src/scenes/*`):
   - hero: an entrance sequence where the words rise out of the water, plus a minimal CTA;
   - timeline: five stops that light up on scroll, with a rolling clock;
   - vessel: the camera boards Tosun Paşa through a lit window;
   - menu: editorial, set on linen;
-  - stage: a still programme with one slow motion;
+  - stage: the programme as a plain list; only the whirl turns, with scroll;
   - return: 23:30, the shores rejoin;
   - reservation.
 - **Menu** (`src/content/menu.ts`) is the single source for the dish dialog (`src/ui/dish.ts`). All 18 items open it.
   The clicked plate flies into the dialog, and ← → / Esc / the back button work.
   The menu is a fixed set, so every dish shows the set price. Ingredients appear only where the menu lists them,
   and allergens are not published, so the dialog says so and links to WhatsApp.
-- **Navigation** (`src/ui/route.ts`): a full-screen "tide" that lists the night's stations. On small screens a
-  quiet booking dock sits at the bottom (`src/ui/reveal.ts`).
+- **Navigation** (`src/ui/nav.ts`): a 64px header, transparent over the hero. It turns solid once you scroll,
+  hides while you read downwards and returns when you scroll up or tab into it. Its booking button appears only
+  after the hero, so the hero keeps a single CTA. At ≤900px the links fold into a sheet (Esc, focus trap, closes
+  on navigation). On small screens a quiet booking dock sits at the bottom (`src/ui/reveal.ts`).
 - **Reservation** (`src/ui/reserve.ts`): builds a WhatsApp message for the real reservation line. It is not a
   checkout and shows no fake confirmation. From a main course's dialog, the form is pre-filled with that main.
 - Content lives in static, semantic HTML (`index.html`, with JSON-LD `Restaurant` + `Menu`) for SEO and no-JS.

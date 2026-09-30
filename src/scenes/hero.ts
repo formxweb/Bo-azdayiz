@@ -86,7 +86,7 @@ export function heroScene(opts: { aerial: boolean; reduced: boolean }) {
   return ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: () => `+=${window.innerHeight * (opts.aerial ? 1.3 : 1.7)}`,
+    end: () => `+=${window.innerHeight * (opts.aerial ? 1.1 : 1.35)}`,
     pin: true,
     scrub: true,
     animation: tl,
@@ -131,10 +131,10 @@ export function heroIntro(opts: { reduced: boolean; invalidate: () => void }) {
   gsap.set(details, { opacity: 0, y: 14 });
 
   gsap.timeline({ defaults: { overwrite: 'auto' } })
-    .to(water, { exposure: 1, duration: 2.6, ease: 'sine.inOut', onUpdate: opts.invalidate }, 0)
+    .to(water, { exposure: 1, duration: 1.9, ease: 'sine.inOut', onUpdate: opts.invalidate }, 0)
     .to(reveal, {
       p: 1,
-      duration: 1.9,
+      duration: 1.4,
       ease: 'expo.out',
       onUpdate: () => {
         const p = reveal.p;
@@ -146,8 +146,8 @@ export function heroIntro(opts: { reduced: boolean; invalidate: () => void }) {
         water.typeReveal = 1.2;
         gsap.set(words, { clearProps: 'clipPath' });
       },
-    }, 0.55)
-    .to(words, { yPercent: 0, duration: 2, ease: 'expo.out', stagger: 0.08 }, 0.55)
-    .to(chrome, { opacity: 1, duration: 1.2, ease: 'power2.out', clearProps: 'opacity' }, 1.2)
-    .to(details, { opacity: 1, y: 0, duration: 1.3, ease: 'expo.out', stagger: 0.09, clearProps: 'transform,opacity' }, 1.35);
+    }, 0.35)
+    .to(words, { yPercent: 0, duration: 1.5, ease: 'expo.out', stagger: 0.06 }, 0.35)
+    .to(chrome, { opacity: 1, duration: 0.8, ease: 'power2.out', clearProps: 'opacity' }, 0.9)
+    .to(details, { opacity: 1, y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.07, clearProps: 'transform,opacity' }, 0.95);
 }

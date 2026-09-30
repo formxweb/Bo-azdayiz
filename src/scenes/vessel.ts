@@ -20,7 +20,7 @@ export function vesselScene(opts: { aerial: boolean; reduced: boolean }) {
   return ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: () => `+=${innerHeight * (opts.aerial ? 2.4 : 2.8)}`,
+    end: () => `+=${innerHeight * (opts.aerial ? 1.8 : 2.0)}`,
     pin: true,
     scrub: true,
     animation: tl,

@@ -29,7 +29,7 @@ export function sofraScene(opts: { reduced: boolean }) {
   ScrollTrigger.create({
     trigger: dim,
     start: 'top top',
-    end: () => `+=${innerHeight * 0.9}`,
+    end: () => `+=${innerHeight * 0.6}`,
     pin: true,
     invalidateOnRefresh: true,
     onUpdate: (st) => {
