@@ -1,0 +1,10 @@
+{
+  "name": "Boğazdayız — Bu gece Boğazdayız",
+  "short_name": "Boğazdayız",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#06080d",
+  "theme_color": "#06080d",
+  "lang": "tr",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

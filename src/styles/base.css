@@ -1,0 +1,223 @@
+/* ─────────────────────────── fonts ─────────────────────────── */
+@font-face {
+  font-family: 'Anybody';
+  src: url('../assets/fonts/anybody-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 50% 150%;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0131, U+2010-2027, U+2030-2033, U+2039-203A, U+2212, U+00B7;
+}
+@font-face {
+  font-family: 'Anybody';
+  src: url('../assets/fonts/anybody-latin-ext.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 50% 150%;
+  font-display: swap;
+  unicode-range: U+011E-011F, U+0130, U+015E-015F;
+}
+/* static wdth 50 / wght 800 cut: shared by the hero words and their WebGL reflection */
+@font-face {
+  font-family: 'Anybody Hero';
+  src: url('../assets/fonts/anybody-hero-latin.woff2') format('woff2');
+  font-weight: 800;
+  font-display: block;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0131, U+2010-2027, U+00B7;
+}
+@font-face {
+  font-family: 'Anybody Hero';
+  src: url('../assets/fonts/anybody-hero-latin-ext.woff2') format('woff2');
+  font-weight: 800;
+  font-display: block;
+  unicode-range: U+011E-011F, U+0130, U+015E-015F;
+}
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/newsreader-italic-latin.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 250 500;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0131, U+2010-2027, U+2030-2033, U+2039-203A, U+2190-2193, U+2212, U+00B7;
+}
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/newsreader-italic-latin-ext.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 250 500;
+  font-display: swap;
+  unicode-range: U+011E-011F, U+0130, U+015E-015F;
+}
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/newsreader-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 350 500;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0131, U+2010-2027, U+2030-2033, U+2039-203A, U+2190-2193, U+2212, U+00B7;
+}
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/newsreader-latin-ext.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 350 500;
+  font-display: swap;
+  unicode-range: U+011E-011F, U+0130, U+015E-015F;
+}
+
+/* ─────────────────────────── tokens ─────────────────────────── */
+:root {
+  --ink: #06080d;
+  --ink-2: #0c121c;
+  --paper: #ece5d8;
+  --paper-60: rgb(236 229 216 / 0.6);
+  --paper-35: rgb(236 229 216 / 0.35);
+  --paper-15: rgb(236 229 216 / 0.15);
+  --cloth: #efe8dc; /* == CREAM in water.frag.glsl */
+  --char: #11151c;
+  --char-60: rgb(17 21 28 / 0.62);
+  --char-20: rgb(17 21 28 / 0.2);
+  --sodium: #ff9147;
+  --port: #ea3a2c;
+  --stbd: #22c46f;
+  --nar: #b8322a;
+
+  --f-struct: 'Anybody', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --f-hero: 'Anybody Hero', 'Anybody', 'Arial Narrow', Impact, sans-serif;
+  --f-voice: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+
+  --gut: clamp(16px, 2.6vw, 44px);
+  --ease-camera: cubic-bezier(0.65, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --vh: 1vh;
+}
+@supports (height: 1svh) {
+  :root { --vh: 1svh; }
+}
+
+/* ─────────────────────────── reset ─────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  background: var(--ink);
+  color: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+body {
+  margin: 0;
+  font-family: var(--f-voice);
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background: var(--ink);
+  overflow-x: clip;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote, address { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+address { font-style: normal; }
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+img, svg, canvas { display: block; }
+::selection { background: var(--sodium); color: var(--ink); }
+
+:focus { outline: none; }
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 6px;
+}
+
+.sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: fixed;
+  z-index: 100;
+  left: var(--gut);
+  top: 12px;
+  padding: 10px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-struct);
+  font-stretch: 120%;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+}
+.skip:focus-visible { transform: none; }
+
+/* ─────────────────────────── type roles ─────────────────────────── */
+.meta {
+  font-family: var(--f-struct);
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: clamp(10px, 0.78vw, 12px);
+  line-height: 1.5;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.voice {
+  font-family: var(--f-voice);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+.stamp {
+  font-family: var(--f-struct);
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: clamp(10px, 0.78vw, 12px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: baseline;
+  gap: 1.2em;
+}
+.stamp time {
+  font-stretch: 50%;
+  font-weight: 800;
+  font-size: 3.2em;
+  letter-spacing: 0;
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+.sep {
+  display: inline-block;
+  width: 2.4em;
+  height: 1px;
+  background: currentColor;
+  vertical-align: middle;
+  margin: 0 0.8em;
+  opacity: 0.6;
+}
+
+/* ─────────────────────────── the water ─────────────────────────── */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(120% 60% at 20% 62%, rgb(150 80 45 / 0.35), transparent 60%),
+    linear-gradient(180deg, #121b2d 0%, #262839 58%, #0b1220 58.2%, #05080e 100%);
+}
+.bosphorus {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  height: 100lvh;
+  pointer-events: none;
+}
+main, .colophon { position: relative; z-index: 1; }
